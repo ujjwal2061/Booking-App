@@ -9,14 +9,13 @@ route.get("/test",(req,res)=>{
 route.post('/register',async (req,res)=>{
     try{
         const {name,password,email}=req.body
-       if(!name || !password||!email){
+       if(!name || !password ||!email){
         return res.status(400).json({msg:"All field are requried"})
        }
        const existingUser = await alluser.findOne({ email });
        if (existingUser) {
            return res.status(400).json({ msg: "User already exists" });
        }
-       
         const newuser=alluser({name,password,email})
         const response=await newuser.save()
         const payload={
@@ -32,7 +31,21 @@ route.post('/register',async (req,res)=>{
 })
 route.post('/login',async(req,res)=>{
     try{
-
+  const {name,password}=req.body
+  const user=await alluser.findOne({name})
+  if(!user){
+    return res.status.json({error:"User does't exsit"})
+  }
+  const ispaswordmatch=await user.comparePassword(password)
+  if(!ispaswordmatch){
+    return res.status(401).json({error:"Password does't match"})
+  }
+    const payload={
+     name:user.name,
+     password:user.password
+}
+  const token=generatetoken(payload)
+  res.json({token})
     }catch(error){
         res.status(500).json({msg:"Server error"})
     }
