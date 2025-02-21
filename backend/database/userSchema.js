@@ -19,6 +19,13 @@ if(!user.isModified('password')) return next()
    next(err)
   }
  })
-   
+ userData.methods.comparePassword=async function(candidatepassword){
+   try{
+  const passwordmatch=await bcrypt.compare(candidatepassword,this.password)
+  return passwordmatch    
+}catch(err){
+    throw err
+}
+} 
 const alluser=mongoose.model('userlist',userData)
    module.exports=alluser;
