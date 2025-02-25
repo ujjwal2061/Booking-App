@@ -6,9 +6,11 @@ export function UserContextProvider({children}){
     const [user,setUser]=useState(null)
     useEffect(()=>{
      if(!user){
-        axios.get('/profile')
+        axios.get('/profile',{withCredentials:true})
+        .then(response=>setUser(response.data))
+        .catch(err=>console.log("Error fetching profile",err))
      }
-    })
+    },[user])
     return (
         <UserContext.Provider value={{user,setUser}}>
             {children}
@@ -16,4 +18,4 @@ export function UserContextProvider({children}){
     )
 }
 
-// Making the User COntext API 
+// Making the User Context API 

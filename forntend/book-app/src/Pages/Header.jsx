@@ -6,12 +6,12 @@ export default function Header() {
   return (
     <div>
       <header className='  flex  justify-between '>
-      <a href='' className='flex  items-center gap-3' >
+      <Link to={"/"} className='flex  items-center gap-3' >
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 -rotate-45">
      <path strokeLinecap="round" strokeLinejoin="round" d="M6 12 3.269 3.125A59.769 59.769 0 0 1 21.485 12 59.768 59.768 0 0 1 3.27 20.875L5.999 12Zm0 0h7.5" />
     </svg>
   <span className='font-bold text-xl'>airbnb</span>
-  </a>
+  </Link>
   <div className='flex gap-3   px-2 py-2 rounded-full border border-gray-500  shadow-lg'>
   <div>Anywhere</div>
    <div className='border-l border-gray-800'></div>
@@ -24,7 +24,7 @@ export default function Header() {
   </svg>
    </button>
   </div>
-  <Link to={'/login'} className='flex gap-3   p-2 items-center rounded-full border border-gray-500 '>
+  <Link to={user? '/account':'/login'} className='flex gap-3   p-2 items-center rounded-full border border-gray-500 '>
   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
   <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
 </svg>
@@ -34,7 +34,7 @@ export default function Header() {
  </svg>
  </div>
  {!!user &&(
-  <div className='text-black font-sans text-[14px] font-semibold'>{user}</div>
+  <div className='text-black font-sans text-[14px] font-semibold'>{user.name}</div>
  )}
   </Link>
 </header>
