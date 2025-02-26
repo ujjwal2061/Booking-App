@@ -17,9 +17,10 @@ export default function Register() {
             setName("")
             setEmail("")
             setPassword("")
-            alert("Your account Create")
-            console.log(response.data);  
+            return response
+            
         } catch (error) {
+          
             console.error("Error connecting to backend:", error);
         }
     }

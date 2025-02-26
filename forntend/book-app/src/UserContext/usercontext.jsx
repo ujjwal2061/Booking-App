@@ -4,15 +4,22 @@ export const UserContext=createContext({})
 
 export function UserContextProvider({children}){
     const [user,setUser]=useState(null)
+    const [ready,setReady]=useState(false)
+      // got the problem while Refersh the page it move to login page 
+      // it happen beacuse when it mount  it take some milesecond   to load account page so.
+      
     useEffect(()=>{
      if(!user){
         axios.get('/profile',{withCredentials:true})
-        .then(response=>setUser(response.data))
-        .catch(err=>console.log("Error fetching profile",err))
-     }
-    },[user])
+        .then(({data})=>{
+            setUser(data)
+            setReady(true)
+        })     
+        
+     } 
+    },[])
     return (
-        <UserContext.Provider value={{user,setUser}}>
+        <UserContext.Provider value={{user,setUser,ready}}>
             {children}
         </UserContext.Provider>
     )
