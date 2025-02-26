@@ -82,5 +82,10 @@ jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
     return res.json({name,email,_id});
 });
 });
+// logout api
+route.post('/logout',(req,res)=>{
+    res.cookie('auth_token','',{maxAge:0}).json(true)
+
+})
 
 module.exports = route;
