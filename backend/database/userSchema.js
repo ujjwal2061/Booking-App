@@ -28,4 +28,4 @@ if(!user.isModified('password')) return next()
 }
 } 
 const alluser=mongoose.model('userlist',userData)
-   module.exports=alluser;
+module.exports=alluser;
