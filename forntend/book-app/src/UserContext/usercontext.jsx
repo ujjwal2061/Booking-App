@@ -14,12 +14,16 @@ export function UserContextProvider({children}){
         .then(({data})=>{
             setUser(data)
             setReady(true)
-        })     
+        }).catch((error)=>{
+            setUser(null);
+            setReady(true)
+            console.log(error)
+      })    
         
      } 
     },[])
     return (
-        <UserContext.Provider value={{user,setUser,ready}}>
+        <UserContext.Provider value={{user,setUser,ready,setReady}}>
             {children}
         </UserContext.Provider>
     )
