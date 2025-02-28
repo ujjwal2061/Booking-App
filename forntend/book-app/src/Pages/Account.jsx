@@ -23,7 +23,8 @@ export default function Account() {
  }
  // function  to logout 
   async function logoutuser(){
-    try{ 
+    try{
+      document.cookie="auth_token=;"
       await axios.post('/logout')
       setUser(null); // Set the user state to null after logging out
       setReady(true)
