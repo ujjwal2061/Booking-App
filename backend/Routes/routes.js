@@ -28,9 +28,9 @@ route.post('/register',async (req,res)=>{
         // Cookies 
         const token=generatetoken(payload)
         res.cookie("auth_token",token ,{
-            httpOnly:true,
+            httpOnly:false,
             secure:process.env.NODE_ENV==="production",
-            sameSite:"Strict",
+          
             maxAge:10*24*60*60*1000,
         })
         res.status(201).json({msg:"User created succesfully",user:response,token:token})
@@ -57,9 +57,8 @@ route.post('/login',async(req,res)=>{
 }
   const token=generatetoken(payload)
   res.cookie("auth_token",token ,{
-    httpOnly:true,
-    secure:process.env.NODE_ENV==="production",
-    sameSite:"Strict",
+    httpOnly:false,
+    secure:false,
     maxAge:10*24*60*60*1000,
 })
    res.json({token ,user:user})
@@ -84,8 +83,13 @@ jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
 });
 // logout api
 route.post('/logout',(req,res)=>{
-    res.cookie('auth_token','',{maxAge:0}).json(true)
+    res.cookie('auth_token','',{
+        httpOnly:true,
+        maxAge:0,secure:false}).json(true)
 
 })
+// route.post("/upload-by-links",(req,res)=>{
+//     const {link}=req.body
+// })
 
 module.exports = route;
