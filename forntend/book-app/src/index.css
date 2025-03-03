@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+hhtml,
+body,
+#root,
+.app{
+    height:100%;
+    width:100%;
+    font-fmaily:"DM Sans";
+
+} */
 input[type="text"],
 input[type="email"],input[type="password"],textarea {
     @apply w-full border my-2 py-2 px-3 rounded-md
