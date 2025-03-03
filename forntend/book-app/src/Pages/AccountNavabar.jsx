@@ -6,7 +6,6 @@ import { useLocation } from "react-router";
 
 export default function AccountNavbar(){
     const location=useLocation()
-    console.log(location)
     function isActive(path){
         return location.pathname===path ? "bg-primary text-white":" bg-gray-300"
        }
