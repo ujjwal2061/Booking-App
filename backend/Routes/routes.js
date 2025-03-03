@@ -1,13 +1,20 @@
 const express=require("express")
-
+const bcrypt = require("bcrypt");
+const download=require("image-downloader")
 const alluser=require("../database/userSchema")
 const {generatetoken} =require("../auth/jwt")
 const jwt=require("jsonwebtoken")
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const route=express.Router()
+const saltRounds = 10;
+const app = express()
+const photomiddleware=multer({dest:'./upload'})
 
 route.get("/test",(req,res)=>{
     res.json("test ok")
-})
+}) 
 // resgister route
 route.post('/register',async (req,res)=>{
     try{
@@ -19,7 +26,8 @@ route.post('/register',async (req,res)=>{
        if (existingUser) {
            return res.status(400).json({ msg: "User already exists" });
        }
-        const newuser=alluser({name,password,email})
+       const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const newuser=alluser({name,password:hashedPassword,email})
         const response=await newuser.save()
         const payload={
             id:response._id,
@@ -47,8 +55,8 @@ route.post('/login',async(req,res)=>{
   if(!user){
     return res.status(404).json({error:"User does't exsit"})
   }
-  const ispaswordmatch=await user.comparePassword(password)
-  if(!ispaswordmatch){
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  if(!isPasswordMatch){
     return res.status(401).json({error:"Password does't match"})
   }
     const payload={
@@ -88,8 +96,69 @@ route.post('/logout',(req,res)=>{
         maxAge:0,secure:false}).json(true)
 
 })
-// route.post("/upload-by-links",(req,res)=>{
-//     const {link}=req.body
-// })
 
+// upload by the link route 
+route.post("/upload-by-links",async (req,res)=>{
+    try{
+        const  {link}=req.body
+        const newname = 'Photo' + Date.now() + '.jpg';
+        const destDir = path.join(__dirname, '../images');
+        const options = {
+            url: link, 
+            dest: path.join(destDir, newname)
+            
+        };
+        await download.image(options)
+        res.json(newname)
+    }catch(err) {
+          console.error('Error downloading image:', err);
+        };
+})
+// for upload photo
+
+
+const storage=multer.diskStorage({
+    destination:function (req,file,cb){
+        cb(null, './upload') 
+    },
+    filename:function(req,file,cb){
+        // const fileuploaddate= Date.now() + '-' + Math.round(Math.random() * 1E9)
+        return cb(null, `${Date.now()}-${file.originalname}`)
+        // return cb(null,file.fieldname+'-'+fileuploaddate)
+    }
+})
+const upload = multer({ storage: storage })
+
+// route.post("/upload",photomiddleware.array('photos',100),(req,res)=>{
+//     try{
+//         const uploadFiles=[]
+//         for (let i=0; i<req.files.length; i++){
+//             const {path,originalname}=req.files[i]
+//             const parts=originalname.split('.')
+//             const ext=parts[parts.length-1];
+//             const newpath=path+'.'+ext
+//             fs.renameSync(path,newpath)
+//             console.log(newpath)
+//             const filename = path.split(/[\/\\]/).pop() + '.' + ext
+//             uploadFiles.push(filename)
+//         }
+//         res.status(200).json(uploadFiles)
+//     }catch(error){
+//         res.status(500).json({Error:"At the upload ",error})
+//     }
+// })
+route.post("/upload",upload.array("photos",100),(req,res)=>{
+    try{
+ const uploadedFiles=[]
+ for(let i=0; i<req.files.length;i++){
+    const{filename}=req.files[i]
+    uploadedFiles.push(filename);
+    }
+    res.status(200).json(uploadedFiles);
+    }catch(error){
+        console.error("Error processing uploads:", error);
+        res.status(500).json({ error: "Upload failed" }); 
+    }
+    
+})
 module.exports = route;
