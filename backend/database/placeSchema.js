@@ -1,16 +1,16 @@
 const mongoose=require("mongoose")
 // Schema for the Places
 const placeSchema=new mongoose.Schema({
-    owner:{type:mongoose.Schema.Types.ObjectId,ref:'User'},
+    owner:{type:mongoose.Schema.Types.ObjectId,ref:'userlist'},
     title:{type:String},
     address:{type:String},
-    photos:[String],
-    description:[String],
-    perks:[String],
+    photos:[{type:String}],
+    description:{type:String},
+    perks:[{type:String}],
     extraInfo:{type:String},
     checkIn:{type:Number},
     checkOut:{type:Number},
-    MaxGuests:{type:Number},
+    maxGuests:{type:Number},
 })
 
 const Placemodel=mongoose.model('Place',placeSchema)

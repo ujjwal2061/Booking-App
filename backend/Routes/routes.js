@@ -6,11 +6,10 @@ const {generatetoken} =require("../auth/jwt")
 const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs');
+const Placemodel = require("../database/placeSchema");
 const route=express.Router()
 const saltRounds = 10;
-const app = express()
-const photomiddleware=multer({dest:'./upload'})
+
 
 route.get("/test",(req,res)=>{
     res.json("test ok")
@@ -38,9 +37,9 @@ route.post('/register',async (req,res)=>{
         res.cookie("auth_token",token ,{
             httpOnly:false,
             secure:process.env.NODE_ENV==="production",
-          
             maxAge:10*24*60*60*1000,
         })
+        console.log("For hello",token)
         res.status(201).json({msg:"User created succesfully",user:response,token:token})
    
     }catch(error){
@@ -114,39 +113,20 @@ route.post("/upload-by-links",async (req,res)=>{
           console.error('Error downloading image:', err);
         };
 })
+
 // for upload photo
-
-
 const storage=multer.diskStorage({
     destination:function (req,file,cb){
         cb(null, './upload') 
     },
     filename:function(req,file,cb){
-        // const fileuploaddate= Date.now() + '-' + Math.round(Math.random() * 1E9)
         return cb(null, `${Date.now()}-${file.originalname}`)
-        // return cb(null,file.fieldname+'-'+fileuploaddate)
+        
     }
 })
 const upload = multer({ storage: storage })
 
-// route.post("/upload",photomiddleware.array('photos',100),(req,res)=>{
-//     try{
-//         const uploadFiles=[]
-//         for (let i=0; i<req.files.length; i++){
-//             const {path,originalname}=req.files[i]
-//             const parts=originalname.split('.')
-//             const ext=parts[parts.length-1];
-//             const newpath=path+'.'+ext
-//             fs.renameSync(path,newpath)
-//             console.log(newpath)
-//             const filename = path.split(/[\/\\]/).pop() + '.' + ext
-//             uploadFiles.push(filename)
-//         }
-//         res.status(200).json(uploadFiles)
-//     }catch(error){
-//         res.status(500).json({Error:"At the upload ",error})
-//     }
-// })
+
 route.post("/upload",upload.array("photos",100),(req,res)=>{
     try{
  const uploadedFiles=[]
@@ -160,5 +140,35 @@ route.post("/upload",upload.array("photos",100),(req,res)=>{
         res.status(500).json({ error: "Upload failed" }); 
     }
     
+})
+route.post('/places',(req,res)=>{
+    const token=req.cookies.auth_token;
+
+    if (!token) {
+        return res.status(401).json({ error: "No authentication token provided" });
+    }
+    jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
+        if (err) {
+            return res.status(403).json({ err: "Invalid token. Please log in again." });
+        }
+        try{  
+            const {
+                title,address,photos,
+                perks,extraInfo, description,
+                checkIn, checkOut,maxGuests
+            }=req.body
+            const placeInfo= await Placemodel.create({
+                owner:userdata.id,
+                title,address,photos,
+                perks,extraInfo, description,
+                checkIn, checkOut,maxGuests
+            }) 
+            console.log(placeInfo)
+            res.json(placeInfo)
+        }catch(error){
+            console.log(error)
+            res.status(400).json({msg:"Error",error})
+        }
+    });
 })
 module.exports = route;
