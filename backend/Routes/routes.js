@@ -153,13 +153,13 @@ route.post('/places',(req,res)=>{
         }
         try{  
             const {
-                title,address,photos,
+                title,address,addPhotos,
                 perks,extraInfo, description,
                 checkIn, checkOut,maxGuests
             }=req.body
             const placeInfo= await Placemodel.create({
                 owner:userdata.id,
-                title,address,photos,
+                title,address,photos:addPhotos,
                 perks,extraInfo, description,
                 checkIn, checkOut,maxGuests
             }) 
@@ -170,5 +170,21 @@ route.post('/places',(req,res)=>{
             res.status(400).json({msg:"Error",error})
         }
     });
+})
+// for the place fetching
+route.get("/places",(req,res)=>{
+    const token=req.cookies.auth_token;
+    if (!token) {
+        return res.status(401).json({ error: "No authentication token provided" });
+    }
+    jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
+        if (err) {
+               return res.status(403).json({ err: "Invalid token. Please log in again." });
+        }
+        const {id}=userdata
+        res.json(await Placemodel.find({owner:id}))
+
+
+    })
 })
 module.exports = route;
