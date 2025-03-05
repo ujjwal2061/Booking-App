@@ -11,8 +11,16 @@ const route=express.Router()
 const saltRounds = 10;
 
 
-route.get("/test",(req,res)=>{
-    res.json("test ok")
+route.get("/home",async(req,res)=>{
+    try{
+        const places=await Placemodel.find();
+        res.json(places)
+        console.log(places)
+    }catch(error){
+        console.log("Error ",error)
+        res.status(500).json({msg:"Error at Feting "})
+    }
+    
 }) 
 // resgister route
 route.post('/register',async (req,res)=>{
@@ -135,6 +143,8 @@ route.post("/upload",upload.array("photos",100),(req,res)=>{
     uploadedFiles.push(filename);
     }
     res.status(200).json(uploadedFiles);
+    console.log("Uploaded photos:", uploadedFiles);
+
     }catch(error){
         console.error("Error processing uploads:", error);
         res.status(500).json({ error: "Upload failed" }); 
@@ -153,15 +163,15 @@ route.post('/places',(req,res)=>{
         }
         try{  
             const {
-                title,address,addPhotos,
+                title,address,photos,
                 perks,extraInfo, description,
-                checkIn, checkOut,maxGuests
+                checkIn, checkout,maxGuests
             }=req.body
             const placeInfo= await Placemodel.create({
-                owner:userdata.id,
-                title,address,photos:addPhotos,
-                perks,extraInfo, description,
-                checkIn, checkOut,maxGuests
+                owner:userdata.id, 
+                title,address,photos:photos, // -> fix the error of here that MissMatch name of the Photos  
+                perks:perks,extraInfo, description,
+                checkIn, checkout,maxGuests
             }) 
             console.log(placeInfo)
             res.json(placeInfo)
@@ -186,5 +196,15 @@ route.get("/places",(req,res)=>{
 
 
     })
+})
+// for the single page api according id of the page
+route.get("/places/:id",async(req,res)=>{
+    const {id}=req.params
+    try{
+        res.json(await Placemodel.findById(id))
+    }catch(error){
+        res.status(400).json({msg:"Got a the oSingle page loading",error})
+        console.log(error)
+    }
 })
 module.exports = route;
