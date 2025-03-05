@@ -1,13 +1,16 @@
 import Preks from "./Perks";
 import Photoupload from "./Photoupload";
-import { useState } from "react";
+import {  useState } from "react";
 import axios from "axios";
 
+
  export default  function PlaceFrom(){
-    const [title,setTitle]=useState("")
+   
+      const [title,setTitle]=useState("")
       const [address,setAddress]=useState("")
       const [description,setDescription]=useState("")
-      const [preks,setPreks]=useState([])
+      const [photos,setPhotos]=useState([])
+      const [perks,setPerks]=useState([])
       const [extraInfo,setExtraInfo]=useState("");
       const [checkIn,setCheckIn]=useState("");
       const [checkout,setCheckOut]=useState("");
@@ -19,9 +22,10 @@ import axios from "axios";
         try{
             const placesData={
                 title, address,
-                preks,description,
-                maxguests,extraInfo,
-                checkIn,checkout}
+                perks:perks,description,
+                photos:photos,
+                maxguests: maxguests,extraInfo,
+                checkIn,checkOut:checkout}
                 await axios.post("/places",placesData,{
                     withCredentials: true
                 })
@@ -30,6 +34,8 @@ import axios from "axios";
                 throw error
             }
     }
+ 
+ 
     return (
         
  <div >
@@ -42,7 +48,7 @@ import axios from "axios";
       <input type="text"  value={address} 
       onChange={(e)=>setAddress(e.target.value)}
       placeholder="Address" />
-       <Photoupload />
+       <Photoupload setPhotos={setPhotos} /> {/*Pass the setPhoto */}
        <h2 className="text-xl  font-serif">Description</h2>
       <p className="text-gray-500 text-sm ">Description of the Place</p>
       <textarea rows={3}  value={description} 
@@ -50,7 +56,7 @@ import axios from "axios";
       <h2 className="text-xl  font-serif">Perkes</h2>
       <p className="text-gray-500 text-sm ">Slecte all  of the Pekers of Your Place</p>
         <div className="grid gap-2  grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-            <Preks selected={preks} onChanage={setPreks} />
+            <Preks selected={perks} onChange={setPerks} />
         </div>
          <h2 className="text-xl  font-serif">Extra Info</h2>
           <p className="text-gray-500 text-sm ">House,Rules,etc</p>

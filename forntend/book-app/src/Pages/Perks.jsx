@@ -4,15 +4,15 @@ import { FaWifi ,FaCarAlt ,
 import { LiaDogSolid } from "react-icons/lia";
 import { FaRadio } from "react-icons/fa6"
 
-export default function Preks({selected,onChanage}){
+export default function Preks({selected,onChange}){
 
     //adding the Preks and Filter of the Preks
     function handlecheck(ev){
         const {checked,name}=ev.target
      if(checked){
-    onChanage([...selected,name])
+        onChange([...selected,name])
     }else{
-        onChanage([...selected.filter((selectedname)=>selectedname !==name)])
+        onChange([...selected.filter((selectedname)=>selectedname !==name)])
     }
     }
     return (

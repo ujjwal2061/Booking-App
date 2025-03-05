@@ -10,6 +10,7 @@ import axios from 'axios';
  import PlacesPage from './Pages/Placespage';
  import PlaceFrom from './Pages/PlaceForm';
  import Bookings from './Pages/Bookings';
+ import PlaceDetails from './Pages/PlaceDetails';
 function App() {
 axios.defaults.baseURL='http://localhost:3000'
   return (
@@ -24,6 +25,7 @@ axios.defaults.baseURL='http://localhost:3000'
        <Route path="/account/places" element={<PlacesPage />} />
        <Route path="/account/places/new" element={<PlaceFrom />} />
       </Route>
+       <Route path="/account/places/:id" element={<PlaceDetails />} />
     </Routes>
     </UserContextProvider>
   )

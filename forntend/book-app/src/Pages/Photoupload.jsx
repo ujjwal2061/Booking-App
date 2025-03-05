@@ -1,8 +1,8 @@
 import { useState } from "react";
 import {FaCloudUploadAlt} from "react-icons/fa";
 import axios from 'axios';
-export default function Photoupload(){
-      const [addPhoto,setaddPhoto]=useState([])
+export default function Photoupload({setPhotos}){
+      const   [addPhoto,setaddPhoto]=useState([])
         const [photolnik,setLink]=useState("")
         // function to upload to photo by link
         const  uploadphotobylink=async(e)=>{
@@ -10,14 +10,15 @@ export default function Photoupload(){
             try{
                 const response=await  axios.post('/upload-by-links' ,{link:photolnik})
                 const newphoto=response.data;
-                 setaddPhoto((prev) => [...prev, newphoto]);
+                 setaddPhoto((prev) => [...prev, newphoto]); /// -> slove the error at that photos store at inside array od the array 
+                 setPhotos((prev) => [...prev, newphoto]);
                     setLink("")
                 }catch(error){
                     console.error("Upload failed:", error.response ? error.response.data : error.message);
         
                 }
         }
-        // for the upload photo
+        // for the upload photo 
         function uploadphoto(event){
         const files=event.target.files;
         const data=new FormData()
@@ -27,7 +28,8 @@ export default function Photoupload(){
         axios.post('/upload',data,{
         }).then((response)=>{
             const {data:newphoto}=response;
-            setaddPhoto((prev) => [...prev, ...newphoto]);
+            setaddPhoto((prev) => [...prev, newphoto]); // -> slove the error at that photos store at inside array od the array 
+            setPhotos((prev) => [...prev, ...newphoto]);
         }).catch((error)=>{
             console.log("Error at Upload",error);
     
