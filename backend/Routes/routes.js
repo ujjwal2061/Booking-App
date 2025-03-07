@@ -7,6 +7,7 @@ const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const path = require('path');
 const Placemodel = require("../database/placeSchema");
+const { title } = require("process");
 const route=express.Router()
 const saltRounds = 10;
 
@@ -147,7 +148,9 @@ route.post("/upload",upload.array("photos",100),(req,res)=>{
 
     }catch(error){
         console.error("Error processing uploads:", error);
-        res.status(500).json({ error: "Upload failed" }); 
+        res.status(500).json({
+        susccess:false,
+        error: "Upload failed" }); 
     }
     
 })
@@ -159,7 +162,9 @@ route.post('/places',(req,res)=>{
     }
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
         if (err) {
-            return res.status(403).json({ err: "Invalid token. Please log in again." });
+            return res.status(403).json({
+                susccess:false,
+                 err: "Invalid token. Please log in again." });
         }
         try{  
             const {
@@ -176,8 +181,9 @@ route.post('/places',(req,res)=>{
           
             res.json(placeInfo)
         }catch(error){
-            console.log(error)
-            res.status(400).json({msg:"Error",error})
+            res.status(500).json({
+                success: false,
+                msg:"Error",error})
         }
     });
 })
@@ -203,8 +209,61 @@ route.get("/places/:id",async(req,res)=>{
     try{
         res.json(await Placemodel.findById(id))
     }catch(error){
-        res.status(400).json({msg:"Got a the oSingle page loading",error})
+        res.status(400).json({msg:"Got a the Single page loading",error})
         console.log(error)
     }
+})
+// for serach query
+route.get("/get-places",async (req,res)=>{
+     try{
+        const searchTerm=req.query.search;
+        const searchquery={}
+        if(searchTerm){
+            const filtersearch=searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+           const regex=new RegExp(filtersearch,'i')
+
+           searchquery.$or=[
+            {title:{$regex:regex}},
+            {address:{$regex:regex}},
+            {description:{$regex:regex}},
+            {perks:{$in:[regex]}}
+           ]
+        }
+
+        if(req.query.address){
+            searchquery.address={
+                // Match the last aprt of the string 
+                $regex:req.query.address,
+                $options:'i' 
+            }
+            }
+            //Searh by the title
+            if(req.query.title){
+            searchquery.title={
+                $regex:req.query.title,
+                $options:'i'
+            }
+        }
+            // check the perks is string or array and if any $in use to find perks inside the array 
+            if(req.query.perks){
+                searchquery.perks={
+                    $in:Array.isArray(req.query.perks)?req.query.perks:[req.query.perks]
+                }
+            }
+       const result=await Placemodel.find(searchquery)
+       //check the result 
+       if(result.length===0){
+        return res.status(400).json({
+            susccess:false,
+            msg:"No places found matching your need"
+        })
+       }
+       
+       res.status(200).json({success:true,result})
+     }catch(error){
+    res.status(500).json({
+        success: false,
+        msg:"Cnat get it",error})
+     }
 })
 module.exports = route;
