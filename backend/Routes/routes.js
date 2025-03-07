@@ -11,11 +11,11 @@ const route=express.Router()
 const saltRounds = 10;
 
 
-route.get("/home",async(req,res)=>{
+route.get("/allplaces",async(req,res)=>{
     try{
         const places=await Placemodel.find();
         res.json(places)
-        console.log(places)
+       
     }catch(error){
         console.log("Error ",error)
         res.status(500).json({msg:"Error at Feting "})
@@ -143,7 +143,7 @@ route.post("/upload",upload.array("photos",100),(req,res)=>{
     uploadedFiles.push(filename);
     }
     res.status(200).json(uploadedFiles);
-    console.log("Uploaded photos:", uploadedFiles);
+   
 
     }catch(error){
         console.error("Error processing uploads:", error);
@@ -173,7 +173,7 @@ route.post('/places',(req,res)=>{
                 perks:perks,extraInfo, description,
                 checkIn, checkout,maxGuests
             }) 
-            console.log(placeInfo)
+          
             res.json(placeInfo)
         }catch(error){
             console.log(error)
