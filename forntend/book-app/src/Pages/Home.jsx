@@ -1,41 +1,54 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
+import React, {  useState } from 'react'
+
+import Homejpg from "../assets/Home.jpg"
+import Moutainjpg from "../assets/Moutain.jpg"
+import { CiSearch } from "react-icons/ci";
 export default function Home() {
-  const [allplaces,setAllplaces]=useState([])
-  useEffect(()=>{
-   axios.get("http://localhost:3000/home")
-      .then(response=>{
-       
-        setAllplaces(response.data)
-      }).catch(error=>{
-        console.log("Errro at Feting",error)
-  })
 
-console.log(allplaces)
-  },[])
+  const [search,setSearch]=useState("")
+ 
+
+
   return (
-    <div className="container mx-auto p-4">
-    <h1 className="text-2xl font-bold mb-4">All Places</h1>
-
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {allplaces.length > 0 ? (
-        allplaces.map((place) => (
-          <div key={place._id} className="border rounded-lg p-3 shadow-lg">
-            {place.photos?.length > 0 ?(
-                    <img src={
-                        place.photos[0].startsWith('http') ?place.photos[0] :
-                        `http://localhost:3000/uploads/${place.photos[0]}`} alt={place.title} className="w-full h-full object-cover" />
-                ):(<p className="text-center text-gray-500">No Image</p>)}
-            <h2 className="text-xl font-semibold mt-2">{place.title}</h2>
-            <p className="text-gray-600">{place.address}</p>
-            <p className="text-gray-800 mt-1">{place.description.substring(0, 60)}...</p>
+    <section className='min-h-screen w-full '>
+    <div className='flex flex-col md:flex-row justify-center items-center mt-2 px-4 md:px-10 py-10'>
+      <div className='md:w-1/2 w-full px-4 md:px-10 py-8 text-center md:text-left'>
+        <h1 className='text-4xl md:text-5xl font-serif'>Explore your <br />place to stay</h1>
+        <p className='mt-4 font-serif text-gray-700'>
+          Stay Beyond the Ordinary – From dreamy beachfront escapes to cozy cabins <br /> in the woods, find a stay that sparks joy.
+        </p>
+        <div className='mt-4 relative w-full md:w-72 mx-auto md:mx-0'>
+          {!search && (
+            <CiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700" />
+          )}
+          <input 
+            type="search" 
+            value={search} 
+            onChange={(e) => setSearch(e.target.value)} 
+            className='w-full rounded-md  px-10 py-2 outline-none' 
+            placeholder='Search places...'
+          />
+        </div>
+        <div className='py-4 hidden md:block'>
+          <h2 className='font-mono px-6 py-2 '>Be With Nature</h2>
+          <div className='w-full md:w-1/2 flex   justify-center '>
+            <img src={Moutainjpg} className='w-96 h-80 md:w-72 md:h-72  object-cover rounded-lg' alt="Nature" />
           </div>
-        ))
-      ) : (
-        <p>No places found.</p>
-      )}
-    </div>
-  </div>
+        </div>
+      </div>
+      <div className='w-full md:w-1/2 '>
+        <img src={Homejpg} className='w-full h-auto md:h-[600px] object-cover md:-mb-6 rounded-md' alt="Home" />
+         <div className='bg-black mt-4 md:mt-9 flex justify-between px-6 rounded-lg py-2 text-white font-serif'>
+          <h1>1,000+</h1>
+          <p>Unique Places</p>
+         </div>
+        
+      </div>
+    </div> 
+ 
+
+                
+</section>
 );
 }
  

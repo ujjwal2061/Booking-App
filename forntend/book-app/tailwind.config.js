@@ -7,8 +7,12 @@ export default {
   theme: {
     extend: {
       colors:{
-        primary:"#F5385D"
-      }
+        primary:"#F5385D",
+        maincolor:"rgba(252, 239, 234, 1)"
+      },
+   font:{
+    samefont:"Inter"
+   }
     },
   },
   plugins: [],

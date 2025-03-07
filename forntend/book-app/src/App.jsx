@@ -1,5 +1,6 @@
 import './App.css'
-import { Routes, Route } from "react-router";
+import { useState,useEffect } from 'react';
+import { Routes, Route ,Navigate} from "react-router";
 import Login from './Pages/Login';
 import Home from './Pages/Home';
 import Account from './Pages/Account';
@@ -11,15 +12,24 @@ import axios from 'axios';
  import PlaceFrom from './Pages/PlaceForm';
  import Bookings from './Pages/Bookings';
  import PlaceDetails from './Pages/PlaceDetails';
+import Allplaces from './Pages/Allplaces';
 function App() {
 axios.defaults.baseURL='http://localhost:3000'
+const [user, setUser] = useState(null);
+
+useEffect(() => {
+  axios.get('/profile', { withCredentials: true })
+    .then(response => setUser(response.data))
+    .catch(() => setUser(null));
+}, []);
   return (
     <UserContextProvider>
     <Routes>
       <Route path="/" element={<Layout />}> 
-       <Route index element={<Home />} />
+      <Route index element={user ? <Navigate to="/allplaces" /> : <Home />} />
        <Route path="/login" element={<Login />} />
        <Route path="/register" element={<Register />} />
+       <Route path="/allplaces" element={<Allplaces />} />
        <Route path="account" element={<Account />} />
        <Route path="/account/bookings" element={<Bookings />} />
        <Route path="/account/places" element={<PlacesPage />} />

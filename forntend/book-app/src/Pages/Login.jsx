@@ -25,7 +25,7 @@ export default function Login() {
   
  }
  if(redirect){
-  return <Navigate to={'/'} />}
+  return <Navigate to={'/allplaces'} />}
   return (
 <div className='mt-4 grow flex items-center justify-around'>
     <div className='mb-64'>
