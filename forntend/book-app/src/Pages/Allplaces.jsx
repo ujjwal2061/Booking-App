@@ -1,19 +1,48 @@
 
- import React, { useEffect, useState } from 'react'
- import AccountNavbar from './AccountNavabar';
+ import React, { useCallback, useEffect, useState } from 'react'
+ import {debounce} from "lodash"
  import { CiSearch } from "react-icons/ci";
  import axios from 'axios'
+ import { Link } from 'react-router';
+
  export default function Allplaces(){
       const [allplaces,setAllplaces]=useState([])
-    const [search,setSearch]=useState("")
+      const [search,setSearch]=useState("")
     useEffect(()=>{
         axios.get("http://localhost:3000/allplaces")
            .then(response=>{
              setAllplaces(response.data)
            }).catch(error=>{
-             console.log("Errro at Feting",error)
+             console.log("Errro at Feting",error) 
        })
        },[])
+
+
+ 
+ // Have to read and Write again this code 
+       const searchplaces = useCallback(
+        debounce(async (searchTerm) => {
+          try {
+            const response = await axios.get("http://localhost:3000/get-places", {
+              params: { search: searchTerm },
+              withCredentials: true,
+            });
+            setAllplaces(response.data.result); 
+          } catch (error) {
+            console.log("Can't Fetch the Data", error);
+          }
+        }, 500),
+        [] 
+      );
+      
+      useEffect(() => {
+        if (search.trim() === "") {
+          setAllplaces([]); 
+          return;
+        }
+        searchplaces(search);
+      }, [search, searchplaces]);
+    
     return(
     <section className='px-3 py-7'>
       <div className='flex py-2   justify-center items-center w-full '>
@@ -24,7 +53,11 @@
           <input 
             type="search" 
             value={search} 
-            onChange={(e) => setSearch(e.target.value)} 
+            onChange={(e) => {
+              setSearch(e.target.value)
+              searchplaces(e.target.value)
+            }
+            }
             className='md:w-96 rounded-md  px-10 py-2 outline-none' 
             placeholder='Search places...'
             />
@@ -33,9 +66,9 @@
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 p-4">
     {allplaces.length > 0 ? (
       allplaces.map((place) => (
-        <div
+        <Link to={`/allplaces/places/${place._id}`}
         key={place._id}
-        className="bg-white shadow-md rounded-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg"
+        className="bg-white shadow-md cursior-ponter  rounded-md overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg"
         >
           {place.photos?.length > 0 ? (
             <img
@@ -59,7 +92,7 @@
               {place.description.substring(0, 60)}...
             </p>
           </div>
-        </div>
+        </Link>
       ))
     ) : (
       <p className="text-center text-gray-500 col-span-full">No places found.</p>

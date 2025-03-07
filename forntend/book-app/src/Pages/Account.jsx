@@ -15,7 +15,7 @@ export default function Account() {
   // got the problem while Refersh the page it move to login page 
 
   if (!ready) return <div>Loading...</div>;
-  if (!user) return <Navigate to="/login" />;
+  if (!user) return <Navigate to="/" />;
 
  // function  to logout 
   async function logoutuser(){

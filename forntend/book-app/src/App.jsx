@@ -26,7 +26,7 @@ useEffect(() => {
     <UserContextProvider>
     <Routes>
       <Route path="/" element={<Layout />}> 
-      <Route index element={user ? <Navigate to="/allplaces" /> : <Home />} />
+       <Route index element={user ? <Navigate to="/allplaces" /> : <Home />} />
        <Route path="/login" element={<Login />} />
        <Route path="/register" element={<Register />} />
        <Route path="/allplaces" element={<Allplaces />} />
@@ -34,8 +34,8 @@ useEffect(() => {
        <Route path="/account/bookings" element={<Bookings />} />
        <Route path="/account/places" element={<PlacesPage />} />
        <Route path="/account/places/new" element={<PlaceFrom />} />
+       <Route path="/allplaces/places/:id" element={<PlaceDetails />} />
       </Route>
-       <Route path="/account/places/:id" element={<PlaceDetails />} />
     </Routes>
     </UserContextProvider>
   )

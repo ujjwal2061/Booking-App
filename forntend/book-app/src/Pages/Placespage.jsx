@@ -26,7 +26,7 @@ useEffect(()=>{
         </div>
         <div className="mt-2  flex-col  px-2 py-2  bg-gray-600">
        {places.length >0 &&places.map((place)=>(
-        <Link to={`/account/places/${place._id}`} key={place._id} className="cursior-ponter" >
+        <Link to={`/allplaces/places/${place._id}`} key={place._id} className="cursior-ponter" >
          <div  className=" flex  m-2  border-2 rounded-md">
                <div className="w-32 h-32  bg-gray-300">
                
