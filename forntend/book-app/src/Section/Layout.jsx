@@ -1,5 +1,5 @@
 import React from 'react'
-import Header from '../Pages/Header'
+import  Header from '../Pages/Header'
 
 import { Outlet } from 'react-router'
 

@@ -1,16 +1,24 @@
-import React, {  useState } from 'react'
-
+import React, {  useState ,useContext} from 'react'
+import { UserContext } from '../UserContext/usercontext';
 import Homejpg from "../assets/Home.jpg"
 import Moutainjpg from "../assets/Moutain.jpg"
 import { CiSearch } from "react-icons/ci";
+import { Navigate } from 'react-router';
 export default function Home() {
 
   const [search,setSearch]=useState("")
- 
+  const { user, ready } = useContext(UserContext);
 
+  if (!ready) {
+    return <div>Loading...</div>;
+  }
 
+  if (user) {
+    return <Navigate to="/allplaces" replace />;
+  }
   return (
     <section className='min-h-screen w-full '>
+
     <div className='flex flex-col md:flex-row justify-center items-center mt-2 px-4 md:px-10 py-10'>
       <div className='md:w-1/2 w-full px-4 md:px-10 py-8 text-center md:text-left'>
         <h1 className='text-4xl md:text-5xl font-serif'>Explore your <br />place to stay</h1>

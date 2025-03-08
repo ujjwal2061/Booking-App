@@ -1,7 +1,7 @@
 import { Link, Navigate, useParams } from "react-router";
 import { FaPlus } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import AccountNavbar from "./AccountNavabar";
+// import AccountNavbar from "./AccountNavabar";
 import axios from 'axios'
 export default function PlacesPage(){
     const {action}=useParams()
@@ -18,7 +18,7 @@ useEffect(()=>{
 },[])
  return(
 <div>
-     <AccountNavbar />
+    
        <div className="text-center">
        <Link className="inline-flex items-center gap-2  bg-primary text-white py-2 px-4 rounded-full " 
        to={'/account/places/new'} >

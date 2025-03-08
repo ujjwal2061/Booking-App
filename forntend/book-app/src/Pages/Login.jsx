@@ -1,14 +1,14 @@
 import axios from 'axios';
 import React, { useContext, useState } from 'react'
 
-import { Link, Navigate } from 'react-router'
+import { Link, Navigate, useNavigate } from 'react-router'
 import { UserContext } from '../UserContext/usercontext';
 export default function Login() {
     const [name,setName]=useState('')
     const [password,setPassword]=useState('')
-    const [redirect,setRedirect]=useState(false)
-  const {setUser}=useContext(UserContext)
-  
+ 
+    const {setUser}=useContext(UserContext)
+   const nvagtion=useNavigate()
  // for submit function 
  async function login(e){
   e.preventDefault();
@@ -18,14 +18,13 @@ export default function Login() {
     },{withCredentials:true}) 
     alert("Login succesfully")
     setUser(response.data.user.name);
-    setRedirect(true) 
+    nvagtion("/allplaces")
   } catch (error) {
       console.error("Error connecting to backend:", error);
   }
   
  }
- if(redirect){
-  return <Navigate to={'/allplaces'} />}
+
   return (
 <div className='mt-4 grow flex items-center justify-around'>
     <div className='mb-64'>

@@ -15,13 +15,14 @@ import axios from 'axios';
 import Allplaces from './Pages/Allplaces';
 function App() {
 axios.defaults.baseURL='http://localhost:3000'
+axios.defaults.withCredentials = true;
 const [user, setUser] = useState(null);
 
-useEffect(() => {
-  axios.get('/profile', { withCredentials: true })
-    .then(response => setUser(response.data))
-    .catch(() => setUser(null));
-}, []);
+// useEffect(() => {
+//   axios.get('/profile', { withCredentials: true })
+//     .then(response => setUser(response.data))
+//     .catch(() => setUser(null));
+// }, []);
   return (
     <UserContextProvider>
     <Routes>

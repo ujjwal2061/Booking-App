@@ -7,7 +7,8 @@ export default {
   theme: {
     extend: {
       colors:{
-        primary:"#F5385D",
+        buttoncolor:"rgba(170, 120, 100, 1)",
+        buttoncolor1:" rgba(243, 139, 120, 1)",
         maincolor:"rgba(252, 239, 234, 1)"
       },
    font:{
