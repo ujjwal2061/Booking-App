@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import axios from 'axios'
 import { Link } from 'react-router'
 import { FaHotel } from "react-icons/fa";
@@ -9,12 +9,26 @@ import { TfiBackRight } from "react-icons/tfi";
 import  discordjpg from "../assets/discord.jpeg"
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate} from 'react-router'
+import { FaCaretDown } from "react-icons/fa";
+import { FaCaretUp } from "react-icons/fa";
 export default function Header() {
   const {user,setUser,setReady}=useContext(UserContext)
   const [IsOpen,setIsOpen]=useState(false)
-  
-   const navigate = useNavigate()
- 
+  const [IsShow,setIsShow]=useState(false)
+  const navigate = useNavigate()
+   
+  const closemenuref=useRef()
+
+   useEffect(()=>{
+    function closemenubara(event){
+      if(closemenuref.current && !closemenuref.current.contains(event.target)){
+       setIsOpen(false)
+       setIsShow(false) 
+      }
+    }
+    document.addEventListener("mousedown",closemenubara)
+    return ()=>document.removeEventListener("mousedown",handlepofile)
+   })
   async function logoutuser(){
     try{
       document.cookie="auth_token=;"
@@ -29,7 +43,10 @@ export default function Header() {
     
   }
   }
-
+  const handlepofile=()=>{
+ 
+    setIsShow((prevState)=>!prevState)
+  }
   const Toogle=()=>{
     setIsOpen((prevstate)=>!prevstate)
   }
@@ -39,21 +56,67 @@ export default function Header() {
       <Link to={"/"} className='flex  items-center gap-3' >
       <h2 className='text-2xl tracking-wide font-mono font-semibold '>Homy</h2>
      </Link>
-    <div className='  gap-7  hidden md:flex  mr-2'>
+    <div className="relative hidden md:block">
+  <div className="flex items-center justify-center gap-2 bg-white rounded-lg py-1 px-3  hover:shadow-lg transition-all duration-200 border border-gray-200">
+    <img src={discordjpg} className="h-8 w-8 rounded-full object-cover" />
+    <button onClick={handlepofile} className="cursor-pointer p-1">
+      <FaCaretDown size={16} className="text-gray-600 hover:text-black transition-colors" />
+    </button>
+  </div>
+  {IsShow && (
+    <div ref={closemenuref} 
+      className="absolute right-0 top-12 w-64 bg-white rounded-xl overflow-hidden z-20  border border-gray-100 animate-fadeIn" >
       {user ? (
-        
-        <Link to="/account" className=' w-8 h-8 rounded-full hover:scale-105 transition-all ease-in-out duration-500 cursor-pointer flex justify-center items-center'>
-          <img src={discordjpg || ""} className='w-8 h-8 border-2 rounded-full object-contain' />
-        </Link>
-      ):(
-        <>
-        <Link to={"/login"}  className='  font-mono   rounded-md px-4 py-1 text-center text-black ' >Sing In  </Link>
-        <Link to={"/register"}  className='bg-black  font-mono   rounded-md px-4 py-1 text-center text-white '>Sing Up</Link>
-        </>
-
+<div className="flex flex-col">
+  <div className="bg-gray-50 p-4 border-b hover:border-gray-200">
+      <Link to="/account" className="w-full">
+        <div className="flex items-center gap-3">
+          <img src={discordjpg} className="h-10 w-10 rounded-full object-cover border border-gray-200" />
+             <div className="flex flex-col">
+                <span className="font-medium text-gray-900">Profile</span>
+                <span className="text-sm text-gray-500">Manage your account</span>
+            </div>
+        </div>
+       </Link>
+     </div>
+  <div className="p-2">
+    <Link to="/account/bookings" className="w-full">
+       <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 transition-colors">
+          <div className="bg-blue-50 p-2 rounded-lg">
+           <FaHotel className="text-blue-600" size={18} />
+            </div>
+              <span className="font-medium text-gray-800">Your Bookings</span>
+            </div>
+      </Link>
+      <Link to="/account/places" className="w-full">
+        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 transition-colors">
+          <div className="bg-green-50 p-2 rounded-lg">
+            <CiViewList className="text-green-600" size={18} />
+            </div>
+        <span className="font-medium text-gray-800">Accommodations</span>
+      </div>
+    </Link>
+  </div>
+ <div className="border-t border-gray-100 p-2 mt-2">
+    <button onClick={logoutuser}  className="w-full  bg-red-600 flex items-center justify-center gap-2 p-2 text-white hover:bg-red-500 rounded-lg transition-colors" >
+     <IoIosLogOut size={18} />
+        <span className="font-medium">Logout</span>
+      </button>
+  </div>
+</div>
+      ) : (
+        <div className="p-4 flex flex-col gap-3">
+          <Link to="/login" className="w-full py-2 px-4 bg-white border border-gray-200 rounded-lg text-center font-medium text-gray-800 hover:bg-gray-50 transition-colors">
+            Sign In
+          </Link>
+          <Link to="/register" className="w-full py-2 px-4 bg-blue-600 rounded-lg text-center font-medium text-white hover:bg-blue-700 transition-colors">
+            Sign Up
+          </Link>
+        </div>
       )}
-
     </div>
+  )}
+</div>
     <button className='md:hidden  mr-2 '
       onClick={Toogle}>
         <TiThMenu  size={23}/>
@@ -61,50 +124,54 @@ export default function Header() {
     </button>
     </header>
     {IsOpen && (
-      <div  className={`fixed top-0 left-0 h-full w-40 px-2 shadow-md bg-maincolor flex flex-col gap-5 md:hidden transition-transform duration-600 ease-in-out ${IsOpen ? "translate-x-0" : "translate-x-full"}`}>
-       <button onClick={()=>setIsOpen(false)}><TfiBackRight size={23} /></button>
-       {user ? (
-        <>
-          <Link to="/account" className=' w-full h-8 rounded-full  cursor-pointer flex justify-center items-center'>
-            <div className=' flex  items-center bg-buttoncolor px-3  py-2 h-10 gap-2 rounded-md w-full'>
-             <img src={discordjpg} className='h-8 w-8 rounded-full object-contain ' />
-              <h2 className='text-white font-mono font-semibold'>{user.name}</h2>
+<div   ref={closemenuref} className={` fixed top-0 z-10 right-0 h-full w-60 px-2 shadow-md bg-white flex flex-col gap-5 md:hidden transition-transform duration-600 ease-in-out ${IsOpen ? "translate-x-0" : "translate-x-full"}`}>
+  <button onClick={()=>setIsOpen(false)}><TfiBackRight size={23} /></button>
+  {user ? (
+  <div className="flex flex-col">
+    <div className=" p-4 rounded-md hover:bg-gray-300">
+      <Link to="/account" className="w-full">
+            <div className="flex items-center hover:border-gray-400 gap-3">
+                <img src={discordjpg} className="h-10 w-10 rounded-full object-cover border border-gray-200" />
+                <div className="flex flex-col">
+                <span className="font-medium text-gray-900">Profile</span>
+                <span className="text-sm text-gray-500">Manage your account</span>
+              </div>
+          </div>
+        </Link>
+    </div>
+    <div className="p-2 flex-col flex  gap-2">
+      <Link to="/account/bookings" className="w-full">
+        <div className="flex items-center bg-gray-100 gap-3 p-2  rounded-lg hover:bg-gray-300 transition-colors">
+            <div className="bg-blue-50 p-2 rounded-lg">
+             <FaHotel className="text-blue-600" size={18} />
             </div>
-           </Link>
-           <Link to="/account/bookings">
-           <div className='flex bg-black text-white px-3 w-full h-10  gap-2 rounded-md items-center'>
-           <FaHotel />
-           <h2 className='font-mono tracking-tighter'>Your Booking</h2>
-           </div>
-           </Link>
-           <Link to="/account/places">
-           <div className='flex  bg-black text-white  gap-1 px-2 w-full h-10 rounded-md items-center'>
-           <CiViewList />
-           <h2 className='font-mono tracking-tighter'>Accomodations</h2>
-           </div>
-           </Link>
-           <div className='flex items-center gap-3 justify-center text-red-500 absolute right-5  bottom-2 bg-black  px-2 w-32 h-10 rounded-md '>
-           <button  onClick={logoutuser} className=" flex  font-mono text-center ">Logout</button>
-           <IoIosLogOut size={20} />
-           </div>
-
-        </>
-
-          ) : (
-            <>
-              <Link to="/login" className='font-mono rounded-md px-4 py-1 text-black'>
-                Sign In
-              </Link>
-              <Link to="/register" className='bg-black font-mono rounded-md px-4 py-1 text-white'>
-                Sign Up
-              </Link>
-            </>
-          )}
+           <span className="font-medium text-gray-800">Your Bookings</span>
+          </div>
+        </Link>
+      <Link to="/account/places" className="w-full">
+      <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-100  hover:bg-gray-300 transition-colors">
+         <div className="bg-green-50 p-2 rounded-lg">
+         <CiViewList className="text-green-600" size={18} />
+        </div>
+        <span className="font-medium text-gray-800">Accommodations</span>
+      </div>
+     </Link>
     </div>
+      <div className=" absolute bottom-2 w-full right-0   p-2 mt-2">
+          <button  onClick={logoutuser}  className="w-full bg-red-600  flex items-center justify-center gap-2 p-2 text-white hover:bg-red-500 rounded-lg transition-colors" >
+          <IoIosLogOut size={18} />
+          <span className="font-medium">Logout</span>
+       </button>
+      </div>
+  </div>
+        ) : (
+    <>
+     <Link to="/login" className='font-mono rounded-md px-4 py-1 text-black'>Sign In</Link>
+     <Link to="/register" className='bg-black font-mono rounded-md px-4 py-1 text-white'> Sign Up</Link>
+    </>
     )}
-  
-    
-
-    </div>
+</div>
+    )}
+</div>
   )
 }
