@@ -20,7 +20,7 @@ useEffect(()=>{
 <div>
     
        <div className="text-center">
-       <Link className="inline-flex items-center gap-2  bg-primary text-white py-2 px-4 rounded-full " 
+       <Link className="inline-flex items-center gap-2  bg-black text-white py-2 px-4 rounded-full " 
        to={'/account/places/new'} >
        <FaPlus /> Add new</Link>
         </div>
@@ -42,9 +42,7 @@ useEffect(()=>{
                {place.perks?.map((perk, index) => (
             <div 
               key={index}
-              className="flex items-center bg-gray-100 p-2 rounded-md"
-            >
-           
+              className="flex items-center bg-gray-100 p-2 rounded-md">
               <span className="capitalize">{perk}</span>
             </div>
           ))}
