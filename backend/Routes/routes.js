@@ -7,7 +7,7 @@ const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const path = require('path');
 const Placemodel = require("../database/placeSchema");
-const { title } = require("process");
+
 const route=express.Router()
 const saltRounds = 10;
 
@@ -16,9 +16,7 @@ route.get("/allplaces",async(req,res)=>{
     try{
         const places=await Placemodel.find();
         res.json(places)
-       
     }catch(error){
-        console.log("Error ",error)
         res.status(500).json({msg:"Error at Feting "})
     }
     
@@ -27,14 +25,11 @@ route.get("/allplaces",async(req,res)=>{
 route.post('/register',async (req,res)=>{
     try{
         const {name,password,email}=req.body
-       if(!name || !password ||!email){
-        return res.status(400).json({msg:"All field are requried"})
-       }
-       const existingUser = await alluser.findOne({ email });
+       const existingUser = await alluser.findOne({ name});
        if (existingUser) {
            return res.status(400).json({ msg: "User already exists" });
        }
-       const hashedPassword = await bcrypt.hash(password, saltRounds);
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
         const newuser=alluser({name,password:hashedPassword,email})
         const response=await newuser.save()
         const payload={
@@ -44,13 +39,11 @@ route.post('/register',async (req,res)=>{
         // Cookies 
         const token=generatetoken(payload)
         res.cookie("auth_token",token ,{
-            httpOnly:false,
+            httpOnly:true,
             secure:process.env.NODE_ENV==="production",
             maxAge:10*24*60*60*1000,
         })
-        console.log("For hello",token)
         res.status(201).json({msg:"User created succesfully",user:response,token:token})
-   
     }catch(error){
         res.status(500).json({msg:"Error creating user",error:error.message})
     }
@@ -63,7 +56,7 @@ route.post('/login',async(req,res)=>{
   if(!user){
     return res.status(404).json({error:"User does't exsit"})
   }
-  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  const isPasswordMatch = await bcrypt.compare(password,user.password);
   if(!isPasswordMatch){
     return res.status(401).json({error:"Password does't match"})
   }
@@ -74,7 +67,7 @@ route.post('/login',async(req,res)=>{
   const token=generatetoken(payload)
   res.cookie("auth_token",token ,{
     httpOnly:false,
-    secure:false,
+    secure: process.env.NODE_ENV === "production",
     maxAge:10*24*60*60*1000,
 })
    res.json({token ,user:user})
@@ -82,6 +75,8 @@ route.post('/login',async(req,res)=>{
         res.status(500).json({msg:"Server error"})
     }
 })
+
+
 // profile route
 route.get("/profile",(req,res)=>{
    const token=req.cookies.auth_token;
@@ -94,6 +89,7 @@ jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
         return res.status(403).json({ err: "Invalid token. Please log in again." });
     }
     const {name,email,_id}=await alluser.findById(userdata.id)
+ 
     return res.json({name,email,_id});
 });
 });
@@ -195,10 +191,11 @@ route.get("/places",(req,res)=>{
     }
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
         if (err) {
-               return res.status(403).json({ err: "Invalid token. Please log in again." });
+            return res.status(403).json({ err: "Invalid token. Please log in again." });
         }
         const {id}=userdata
-        res.json(await Placemodel.find({owner:id}))
+        const userplaces=await Placemodel.find({owner:id})
+        res.json(userplaces)
 
 
     })
@@ -210,7 +207,7 @@ route.get("/places/:id",async(req,res)=>{
         res.json(await Placemodel.findById(id))
     }catch(error){
         res.status(400).json({msg:"Got a the Single page loading",error})
-        console.log(error)
+       
     }
 })
 // for serach query
