@@ -16,6 +16,7 @@ export function UserContextProvider({children}){
         setLoading(true)
         axios.get('/profile',{withCredentials:true})
         .then(({data})=>{
+            console.log(data)
             setUser(data)
             setReady(true)
             setLoading(false);

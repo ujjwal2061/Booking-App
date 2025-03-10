@@ -1,12 +1,12 @@
 
-import React,{ useContext} from 'react'
+import React,{ useContext, useState} from 'react'
 import { UserContext } from '../UserContext/usercontext'
 
 export default function Account() {
   const {user} =useContext(UserContext)
+  const [newuserName,setUserName]=useState("")
 
-
- 
+ console.log(user?.name)
 
   return (
         <div className="mt-6 text-center max-w-lg mx-auto ">

@@ -68,7 +68,7 @@
       allplaces.map((place) => (
         <Link to={`/allplaces/places/${place._id}`}
         key={place._id}
-        className="bg-white shadow-md cursior-ponter  rounded-md overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-lg"
+        className="bg-white shadow-md cursior-ponter  rounded-md overflow-hidden transform transition duration-300  hover:shadow-lg"
         >
           {place.photos?.length > 0 ? (
             <img
@@ -85,12 +85,13 @@
               <p className="text-gray-500">No Image</p>
             </div>
           )}
-          <div className="p-4">
+          <div className="p-4 flex flex-col gap-2">
             <h2 className="text-lg font-semibold text-gray-900">{place.title}</h2>
             <p className="text-gray-600 text-sm">{place.address}</p>
             <p className="text-gray-700 mt-2 text-sm">
               {place.description.substring(0, 60)}...
             </p>
+            <button className='px-5 bg-black w-1/2 py-1 text-center rounded-md  text-white'>Book Now</button>
           </div>
         </Link>
       ))
