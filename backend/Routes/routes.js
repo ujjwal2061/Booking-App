@@ -13,11 +13,21 @@ const saltRounds = 10;
 
 
 route.get("/allplaces",async(req,res)=>{
+    const page=parseInt(req.query.page) || 1;
+    const limit=parseInt(req.query.limit) || 5;
     try{
-        const places=await Placemodel.find();
-        res.json(places)
+        const skip=(page-1)*limit
+        const totalPlaces=await Placemodel.countDocuments()
+        const places=await Placemodel.find({})
+           .skip(skip)
+           .limit(limit)
+        res.json({places,
+            currentPage:page,
+            totalpage:Math.ceil(totalPlaces/limit),
+            totalPlaces:totalPlaces
+        })
     }catch(error){
-        res.status(500).json({msg:"Error at Feting "})
+        res.status(500).json({msg:"Interal server Error ",error})
     }
     
 }) 
