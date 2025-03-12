@@ -13,6 +13,7 @@ import axios from 'axios';
  import Bookings from './Pages/Bookings';
  import PlaceDetails from './Pages/PlaceDetails';
 import Allplaces from './Pages/Allplaces';
+import { Bookingcontext, BookingcontextProvider } from './UserContext/Bookingcontext';
 function App() {
 axios.defaults.baseURL='http://localhost:3000'
 axios.defaults.withCredentials = true;
@@ -25,6 +26,7 @@ const [user, setUser] = useState(null);
 // }, []);
   return (
     <UserContextProvider>
+      <BookingcontextProvider>
     <Routes>
       <Route path="/" element={<Layout />}> 
        <Route index element={user ? <Navigate to="/allplaces" /> : <Home />} />
@@ -38,6 +40,7 @@ const [user, setUser] = useState(null);
        <Route path="/allplaces/places/:id" element={<PlaceDetails />} />
       </Route>
     </Routes>
+   </BookingcontextProvider>
     </UserContextProvider>
   )
 }
