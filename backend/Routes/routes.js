@@ -87,8 +87,11 @@ route.post('/login',async(req,res)=>{
 })
 
 
+
+
+
 // profile route
-route.get("/profile",(req,res)=>{
+route.get("/profile",(req,res,)=>{
    const token=req.cookies.auth_token;
    if (!token) {
     return res.status(401).json({ msg: "Unauthorized. Please log in." });
@@ -103,6 +106,9 @@ jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
     return res.json({name,email,_id});
 });
 });
+
+
+
 // logout api
 route.post('/logout',(req,res)=>{
     res.cookie('auth_token','',{
@@ -125,7 +131,8 @@ route.post("/upload-by-links",async (req,res)=>{
         await download.image(options)
         res.json(newname)
     }catch(err) {
-          console.error('Error downloading image:', err);
+        res.status(400).json({error:"From the Sever ",err})
+       
         };
 })
 
@@ -150,8 +157,6 @@ route.post("/upload",upload.array("photos",100),(req,res)=>{
     uploadedFiles.push(filename);
     }
     res.status(200).json(uploadedFiles);
-   
-
     }catch(error){
         console.error("Error processing uploads:", error);
         res.status(500).json({
