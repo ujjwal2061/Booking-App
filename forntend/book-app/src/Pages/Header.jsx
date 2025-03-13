@@ -15,10 +15,16 @@ export default function Header() {
   const {user,setUser,setReady}=useContext(UserContext)
   const [IsOpen,setIsOpen]=useState(false)
   const [IsShow,setIsShow]=useState(false)
+   const [profileImage,setprofileImage]=useState("")
   const navigate = useNavigate()
    
   const closemenuref=useRef()
-
+useEffect(()=>{
+  const userImage=localStorage.getItem("userImage")
+ if(userImage){
+  setprofileImage(userImage)
+ }
+},[])
    useEffect(()=>{
     function closemenubara(event){
       if(closemenuref.current && !closemenuref.current.contains(event.target)){
@@ -36,6 +42,7 @@ export default function Header() {
       setUser(null); // Set the user state to null after logging out
       setReady(true)
        navigate("/")
+       localStorage.clear("userImage")
     
   } catch (error) {
     navigate("/")
@@ -58,7 +65,7 @@ export default function Header() {
      </Link>
     <div className="relative hidden md:block">
   <div className="flex items-center justify-center gap-2 bg-white rounded-lg py-1 px-3  hover:shadow-lg transition-all duration-200 border border-gray-200">
-    <img src={discordjpg} className="h-8 w-8 rounded-full object-cover" />
+    <img src={profileImage ||discordjpg} className="h-8 w-8 rounded-full object-cover" />
     <button onClick={handlepofile} className="cursor-pointer p-1">
       <FaCaretDown size={16} className="text-gray-600 hover:text-black transition-colors" />
     </button>
@@ -71,7 +78,7 @@ export default function Header() {
   <div className="bg-gray-50 p-4 border-b hover:border-gray-200">
       <Link to="/account" className="w-full">
         <div className="flex items-center gap-3">
-          <img src={discordjpg} className="h-10 w-10 rounded-full object-cover border border-gray-200" />
+          <img src={ profileImage ||discordjpg} className="h-10 w-10 rounded-full object-cover border border-gray-200" />
              <div className="flex flex-col">
                 <span className="font-medium text-gray-900">Profile</span>
                 <span className="text-sm text-gray-500">Manage your account</span>
