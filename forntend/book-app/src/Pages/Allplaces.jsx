@@ -23,7 +23,8 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
              setAllplaces(response.data.places)
              setTotalpage(response.data.totalpage)
            }).catch(error=>{
-             console.log("Errro at Feting",error) 
+            setError(error)
+         
        }).finally(()=>{
         setError(false)
        })
