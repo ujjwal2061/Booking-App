@@ -16,7 +16,7 @@ app.use('/images', express.static(path.join(__dirname,'/images')))
 app.use('/uploads', express.static(path.join(__dirname, '/upload')));
 app.use(cookies()); 
 app.use(cors({
-    origin:'http://localhost:5173',
+    origin:'https://booking-app-o4u9.vercel.app/',
     credentials:true
 }))
 const destDir = path.join(__dirname, 'images');
