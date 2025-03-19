@@ -25,5 +25,7 @@ if (!fs.existsSync(destDir)) {
 }
 app.use(allrouter)
 
-
+app.get("/",(req,res)=>{
+    res.send({message:"Hello world"})
+})
 app.listen(PORT,()=>{console.log(`Server is Start at Port ${PORT}`)})
