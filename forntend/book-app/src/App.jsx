@@ -15,7 +15,7 @@ import axios from 'axios';
 import Allplaces from './Pages/Allplaces';
 import { Bookingcontext, BookingcontextProvider } from './UserContext/Bookingcontext';
 function App() {
-axios.defaults.baseURL='http://localhost:3000'
+axios.defaults.baseURL='https://booking-app-eosin-eta.vercel.app/'
 axios.defaults.withCredentials = true;
 const [user, setUser] = useState(null);
 
