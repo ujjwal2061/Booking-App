@@ -14,7 +14,7 @@ useEffect(()=>{
     axios.get("/places",{withCredentials: true})
     .then(({data})=>{
     setPlaces(data)
-    console.log(data)
+   
     })
 },[])
  return(

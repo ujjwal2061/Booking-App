@@ -96,14 +96,14 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
             placeholder='Search places...'/>
         </div>
       </div>
-    <div className="grid grid-cols-1 sm:grid-cols-2  lg:flex lg:px-40 lg:flex-col gap-6  p-4">
+    <div className="grid  grid-cols-1 sm:grid-cols-2  lg:flex lg:px-40 lg:flex-col gap-6  p-4">
      {error ? (
       <p className='text-red-600 text-center '>Something went Wrong </p>
      ):(allplaces.map((place) => (
            <Link to={`/allplaces/places/${place._id}`}
            key={place._id}
-           className=" cursior-ponter  lg:px-10  rounded-md w-full transform transition duration-300  " >
-           <div className="w-full h-52  md:h-60 lg:h-[400px] overflow-hidden rounded-t-md">
+           className=" cursior-ponter  lg:px-15  rounded-md w-full transform transition duration-300  " >
+           <div className="w-full  h-60  overflow-hidden rounded-t-md">
            {place.photos?.length > 0 ? (
              <img
              src={
@@ -120,10 +120,10 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
               </div>
             )}
             </div>
-            <div className="p-4 flex flex-col bg-white gap-2">
+            <div className="p-4 flex flex-col  flex-grow  bg-white gap-2">
             <h2 className="text-lg font-semibold text-gray-900">{place.title}</h2>
             <p className="text-gray-600 text-sm">{place.address}</p>
-            <p className="text-gray-700 mt-2 text-sm">
+            <p className="text-gray-700 mt-2  min-h-[50px] text-sm">
             {place.description.substring(0, 60)}...
             </p>
             <p className="text-gray-700 mt-2 font-serif text-xs">{place.extraInfo}</p>
