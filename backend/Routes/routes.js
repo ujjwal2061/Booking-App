@@ -1,5 +1,5 @@
 const express=require("express")
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
 const download=require("image-downloader")
 const alluser=require("../database/userSchema")
 const {generatetoken} =require("../auth/jwt")
