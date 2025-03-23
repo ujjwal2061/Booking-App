@@ -1,5 +1,5 @@
 const express=require("express");
-const cors=require("cors")
+const cors=require("cors")//-> for cros connect the clinet and backend
 const db=require("./connection")
 const cookies=require("cookie-parser")
 const allrouter=require("./Routes/routes")
@@ -16,7 +16,7 @@ app.use('/images', express.static(path.join(__dirname,'/images')))
 app.use('/uploads', express.static(path.join(__dirname, '/upload')));
 app.use(cookies()); 
 app.use(cors({
-    origin:'https://booking-app-o4u9.vercel.app/',
+    origin:' http://localhost:5173',
     credentials:true
 }))
 const destDir = path.join(__dirname, 'images');
@@ -25,7 +25,4 @@ if (!fs.existsSync(destDir)) {
 }
 app.use(allrouter)
 
-app.get("/",(req,res)=>{
-    res.send({message:"Hello world"})
-})
 app.listen(PORT,()=>{console.log(`Server is Start at Port ${PORT}`)})
