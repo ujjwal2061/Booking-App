@@ -12,11 +12,12 @@ const PORT=3000;
 app.use(express.json())
  
 
-app.use('/images', express.static(path.join(__dirname,'/images')))
-app.use('/uploads', express.static(path.join(__dirname, '/upload')));
+app.use('/images', express.static(path.join(__dirname,'images')))
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cookies()); 
 app.use(cors({
-    origin:' http://localhost:5173',
+    origin:['https://booking-app-lake-gamma.vercel.app',
+         "http://localhost:5173",  ],
     credentials:true
 }))
 const destDir = path.join(__dirname, 'images');
