@@ -14,16 +14,16 @@ import axios from 'axios';
  import PlaceDetails from './Pages/PlaceDetails';
 import Allplaces from './Pages/Allplaces';
 import {  BookingcontextProvider } from './UserContext/Bookingcontext';
+import api from "./api"
 function App() {
-axios.defaults.baseURL='http://localhost:3000'
-axios.defaults.withCredentials = true;
+
 const [user, setUser] = useState(null);
 
-// useEffect(() => {
-//   axios.get('/profile', { withCredentials: true })
-//     .then(response => setUser(response.data))
-//     .catch(() => setUser(null));
-// }, []);
+useEffect(() => {
+  api.get('/profile', { withCredentials: true })
+    .then(response => setUser(response.data))
+    .catch(() => setUser(null));
+}, []);
   return (
     <UserContextProvider>
       <BookingcontextProvider>

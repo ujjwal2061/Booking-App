@@ -1,9 +1,9 @@
-import axios from 'axios';
+
 import React, { useContext, useEffect, useState ,useRef} from 'react'
 import { BiLoaderAlt } from 'react-icons/bi';
 import { Link,  useNavigate } from 'react-router'
 import { UserContext } from '../UserContext/usercontext';
-
+import api from '../api';
 export default function Login() {
     const [name,setName]=useState('')
     const [password,setPassword]=useState('')
@@ -16,7 +16,7 @@ export default function Login() {
   e.preventDefault();
   try{
     setLoading(true)
-    const response=await axios.post('/login',{
+    const response=await api.post('/login',{
       name,password
     },{withCredentials:true}) 
     setUser(response.data.user);

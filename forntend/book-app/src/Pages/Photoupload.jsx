@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {FaCloudUploadAlt} from "react-icons/fa";
 import axios from 'axios';
+import api from "../api";
 export default function Photoupload({setPhotos}){
       const   [addPhoto,setaddPhoto]=useState([])
         const [photolnik,setLink]=useState("")
@@ -8,7 +9,7 @@ export default function Photoupload({setPhotos}){
         const  uploadphotobylink=async(e)=>{
             e.preventDefault()
             try{
-                const response=await  axios.post('/upload-by-links' ,{link:photolnik})
+                const response=await  api.post('/upload-by-links' ,{link:photolnik})
                 const newphoto=response.data;
                  setaddPhoto((prev) => [...prev, newphoto]); /// -> slove the error at that photos store at inside array od the array 
                  setPhotos((prev) => [...prev, newphoto]);
@@ -25,7 +26,7 @@ export default function Photoupload({setPhotos}){
         for(let i=0; i<files.length;i++){
             data.append('photos',files[i]);
         }
-        axios.post('/upload',data,{
+        api.post('/upload',data,{
         }).then((response)=>{
             const {data:newphoto}=response;
             setaddPhoto((prev) => [...prev, newphoto]); // -> slove the error at that photos store at inside array od the array 
@@ -52,8 +53,8 @@ export default function Photoupload({setPhotos}){
               {addPhoto.length > 0 && addPhoto.map((link, index) => (
                   <div key={index} className="py-2 px-2 ">
                  <img   src={link.includes('http') ? link : 
-                     (link.includes('.jpg') ? `http://localhost:3000/images/${link}` : 
-                      `http://localhost:3000/uploads/${link}`)}
+                     (link.includes('.jpg') ? `${import.meta.env.VITE_API_BASE_URL}/images/${link}` : 
+                      `${import.meta.env.VITE_API_BASE_URL}/uploads/${link}`)}
                 alt="Uploaded" 
                 className="w-36 h-40 object-cover rounded-lg"  />
             </div>

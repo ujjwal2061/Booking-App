@@ -4,7 +4,7 @@
  import { CiSearch } from "react-icons/ci";
  import axios from 'axios'
  import { Link } from 'react-router';
-
+  import api from "../api"
 import { Bookingcontext } from '../UserContext/Bookingcontext';
  export default function Allplaces(){
       const [allplaces,setAllplaces]=useState([])
@@ -13,42 +13,43 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
       const [error,setError]=useState(false)
       const [currentpage,setCurrnetpage]=useState(1)
       const [totalpage,setTotalpage]=useState(1)
-      
-    useEffect(()=>{
-      setError(true)
-        axios.get("http://localhost:3000/allplaces",{
+      console.log("url",import.meta.env.VITE_API_BASE_URL
+      )
+      useEffect(()=>{
+        setError(true)
+        api.get("/allplaces",{
           params:{page:currentpage,limit:5}
         })
            .then(response=>{
              setAllplaces(response.data.places)
              setTotalpage(response.data.totalpage)
-           }).catch(error=>{
-            setError(error)
-         
-       }).finally(()=>{
-        setError(false)
-       })
-       },[currentpage])
-
-
-  // handle the page change
-  const chnagepage=()=>{
-    if(currentpage < totalpage){
-      setCurrnetpage(currentpage+1)
-    }
-  }
-  const backpage=()=>{
-    if(currentpage>1){
-      setCurrnetpage((prevpage)=>prevpage-1)
-    }
-  }
- // Have to read and Write again this code 
-       const searchplaces = useCallback(
-        debounce(async (searchTerm) => {
-          try {
-            const response = await axios.get("http://localhost:3000/get-places", {
-              params: { search: searchTerm },
-              withCredentials: true,
+            }).catch(error=>{
+              setError(error)
+              
+            }).finally(()=>{
+              setError(false)
+            })
+          },[currentpage])
+          
+          
+          // handle the page change
+          const chnagepage=()=>{
+            if(currentpage < totalpage){
+              setCurrnetpage(currentpage+1)
+            }
+          }
+          const backpage=()=>{
+            if(currentpage>1){
+              setCurrnetpage((prevpage)=>prevpage-1)
+            }
+          }
+          // Have to read and Write again this code 
+          const searchplaces = useCallback(
+            debounce(async (searchTerm) => {
+              try {
+                const response = await api.get("/get-places", {
+                  params: { search: searchTerm },
+                  withCredentials: true,
             });
             setAllplaces(response.data.result); 
           } catch (error) {
@@ -65,23 +66,20 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
         }
         searchplaces(search);
       }, [search, searchplaces]);
-    
+      
       /// function to add in booking Section 
       const handleBookhng=(event,newpalces)=>{
         event.stopPropagation();
         event.preventDefault();  
-      setBooking((prevPlace)=>{
-     if(prevPlace.some((places)=>places._id===newpalces._id)){
-      return prevPlace
-    }
-    const allBooking=[...prevPlace ,newpalces]
-    return allBooking
-   })
-    }
-    //remove BookingList
-   
-     
-    return(
+        setBooking((prevPlace)=>{
+          if(prevPlace.some((places)=>places._id===newpalces._id)){
+            return prevPlace
+          }
+          const allBooking=[...prevPlace ,newpalces]
+          return allBooking
+        })
+      }
+      return(
     <section className='px-3 py-7'>
       <div className='flex py-2   justify-center items-center w-full '>
          <div className='relative   mx-auto md:mx-0'>
@@ -89,27 +87,28 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
             <CiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700" />
           )}
           <input  type="search" value={search} onChange={(e) => {
-              setSearch(e.target.value)
-              searchplaces(e.target.value)
-            }}
-            className='md:w-96 rounded-md  px-10 py-2 outline-none' 
-            placeholder='Search places...'/>
+            setSearch(e.target.value)
+            searchplaces(e.target.value)
+          }}
+          className='md:w-96 rounded-md  px-10 py-2 outline-none' 
+          placeholder='Search places...'/>
         </div>
       </div>
     <div className="grid  grid-cols-1 sm:grid-cols-2  lg:flex lg:px-40 lg:flex-col gap-6  p-4">
      {error ? (
-      <p className='text-red-600 text-center '>Something went Wrong </p>
-     ):(allplaces.map((place) => (
-           <Link to={`/allplaces/places/${place._id}`}
-           key={place._id}
-           className=" cursior-ponter  lg:px-15  rounded-md w-full transform transition duration-300  " >
+       <p className='text-red-600 text-center '>Something went Wrong </p>
+      ):(allplaces.map((place) => (
+        <Link to={`/allplaces/places/${place._id}`}
+        key={place._id}
+        className=" cursior-ponter  lg:px-15  rounded-md w-full transform transition duration-300  " >
            <div className="w-full  h-60  overflow-hidden rounded-t-md">
            {place.photos?.length > 0 ? (
+           
              <img
              src={
-               place.photos[0].startsWith("http")
+               place.photos[0]?.startsWith("http")
                ? place.photos[0]
-               : `http://localhost:3000/uploads/${place.photos[0]}`
+               : `${import.meta.env.VITE_API_BASE_URL}/uploads/${place.photos[0]}`
               }
               alt={place.title}
               className="w-full  h-full object-cover rounded-t-md"

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useRef } from 'react'
-import axios from "axios"
+
 import { BiLoaderAlt } from 'react-icons/bi';
+import api from '../api';
 export default function Register() {
     const [name,setName]=useState('')
     const [email,setEmail]=useState('')
@@ -20,7 +21,7 @@ export default function Register() {
             return;
           }
           setLoading(true)
-           await axios.post('/register',{
+           await api.post('/register',{
             name,
             email,
             password

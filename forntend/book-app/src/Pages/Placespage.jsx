@@ -1,8 +1,9 @@
 import { Link, Navigate, useParams } from "react-router";
 import { FaPlus } from "react-icons/fa";
 import { useEffect, useState } from "react";
+import api from "../api";
 // import AccountNavbar from "./AccountNavabar";
-import axios from 'axios'
+// import axios from 'axios'
 export default function PlacesPage(){
     const {action}=useParams()
     const [redirect,setRedirect]=useState(false)
@@ -11,7 +12,7 @@ if(redirect && action!=='new'){
     return <Navigate to={'/places/new'} />
 }
 useEffect(()=>{
-    axios.get("/places",{withCredentials: true})
+    api.get("/places",{withCredentials: true})
     .then(({data})=>{
     setPlaces(data)
    
@@ -37,7 +38,7 @@ useEffect(()=>{
             <img
               src={place.photos[0].startsWith('http')
                 ? place.photos[0]
-                : `http://localhost:3000/uploads/${place.photos[0]}`}
+                : `${import.meta.env.VITE_API_BASE_URL}/uploads/${place.photos[0]}`}
               alt={place.title}
               className="w-full h-full object-cover rounded-t-md"
             />

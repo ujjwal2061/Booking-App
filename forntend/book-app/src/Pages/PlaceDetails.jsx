@@ -1,7 +1,7 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-import axios from "axios";
 
+import api from "../api";
 export default function PlaceDetails() {
   const { id } = useParams();
   const [data, setData] = useState(null);
@@ -9,7 +9,7 @@ export default function PlaceDetails() {
 
   useEffect(() => {
     if (!id) return;
-    axios.get("/places/" + id).then((response) => {
+    api.get("/places/" + id).then((response) => {
       setData(response.data);
       setLoading(false);
     });
@@ -24,7 +24,7 @@ export default function PlaceDetails() {
       <div className="w-full">
       <img src={ data.photos[0].startsWith("http")
               ? data.photos[0]
-              : `http://localhost:3000/uploads/${data.photos[0]}` }alt={data.title}
+              : `${import.meta.env.VITE_API_BASE_URL}/uploads/${data.photos[0]}` }alt={data.title}
             className="w-full h-auto object-contain rounded-md" />
       </div>
       <div className="mt-4">
@@ -62,7 +62,7 @@ export default function PlaceDetails() {
             <img key={index}
             src={photo.startsWith("http")
                 ? photo
-                : `http://localhost:3000/uploads/${photo}` }alt={data.title}
+                : `${import.meta.env.VITE_API_BASE_URL}/${photo}` }alt={data.title}
               className="w-full h-auto object-contain rounded-md" />
           ))}
         </div>

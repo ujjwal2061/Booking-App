@@ -10,7 +10,7 @@ import  discordjpg from "../assets/discord.jpeg"
 import { IoIosLogOut } from "react-icons/io";
 import { useNavigate} from 'react-router'
 import { FaCaretDown } from "react-icons/fa";
-import { FaCaretUp } from "react-icons/fa";
+import api from '../api';
 export default function Header() {
   const {user,setUser,setReady}=useContext(UserContext)
   const [IsOpen,setIsOpen]=useState(false)
@@ -38,7 +38,7 @@ useEffect(()=>{
   async function logoutuser(){
     try{
       document.cookie="auth_token=;"
-      await axios.post('/logout')
+      await api.post('/logout')
       setUser(null); // Set the user state to null after logging out
       setReady(true)
        navigate("/")

@@ -2,9 +2,10 @@ import Preks from "./Perks";
 import Photoupload from "./Photoupload";
 import {  useEffect, useRef, useState } from "react";
 import axios from "axios";
+import api from "../api";
 import { useNavigate } from "react-router";
 import { BiLoaderAlt } from 'react-icons/bi';
-import { pullAll } from "lodash";
+
  export default  function PlaceFrom(){
    
       const [title,setTitle]=useState("")
@@ -43,7 +44,7 @@ import { pullAll } from "lodash";
               setError("Please fill in all required fields");
               return; 
           }
-            await axios.post("/places",placesData,{
+            await api.post("/places",placesData,{
                     withCredentials: true
                 })
                 setTimeout(()=>{
