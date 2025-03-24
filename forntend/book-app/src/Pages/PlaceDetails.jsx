@@ -1,6 +1,6 @@
 import { useParams } from "react-router";
 import { useEffect, useState } from "react";
-
+import  Description from "./Description"
 import api from "../api";
 export default function PlaceDetails() {
   const { id } = useParams();
@@ -24,7 +24,7 @@ export default function PlaceDetails() {
       <div className="w-full">
       <img src={ data.photos[0].startsWith("http")
               ? data.photos[0]
-              : `${import.meta.env.VITE_API_BASE_URL}/uploads/${data.photos[0]}` }alt={data.title}
+              : `http://localhost:3000/upload/${data.photos[0]}` }alt={data.title}
             className="w-full h-auto object-contain rounded-md" />
       </div>
       <div className="mt-4">
@@ -33,7 +33,7 @@ export default function PlaceDetails() {
       </div>
 
       <div className="mt-4">
-        <p className="text-gray-700">{data.description}</p>
+      <Description description={data.description} />
         <p className="text-gray-600 italic mt-2">{data.extraInfo}</p>
       </div>
       <div className="mt-4">
@@ -59,11 +59,13 @@ export default function PlaceDetails() {
       {data.photos.length > 1 && (
         <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
           {data.photos.slice(1).map((photo, index) => (
-            <img key={index}
+            <div className="break-inside-avoid" key={index}>   
+            <img 
             src={photo.startsWith("http")
                 ? photo
-                : `${import.meta.env.VITE_API_BASE_URL}/${photo}` }alt={data.title}
+                : `http://localhost:3000/upload/${photo}` }alt={data.title}
               className="w-full h-auto object-contain rounded-md" />
+          </div>
           ))}
         </div>
       )}

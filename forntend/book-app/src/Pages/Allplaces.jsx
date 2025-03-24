@@ -18,9 +18,11 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
       useEffect(()=>{
         setError(true)
         api.get("/allplaces",{
+          withCredentials: true,
           params:{page:currentpage,limit:5}
         })
            .then(response=>{
+            console.log(response.data)
              setAllplaces(response.data.places)
              setTotalpage(response.data.totalpage)
             }).catch(error=>{
@@ -81,7 +83,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
       }
       return(
     <section className='px-3 py-7'>
-      <div className='flex py-2   justify-center items-center w-full '>
+      <div className='flex py-2   justify-center  items-center w-full'>
          <div className='relative   mx-auto md:mx-0'>
           {!search && (
             <CiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-700" />
@@ -94,13 +96,13 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
           placeholder='Search places...'/>
         </div>
       </div>
-    <div className="grid  grid-cols-1 sm:grid-cols-2  lg:flex lg:px-40 lg:flex-col gap-6  p-4">
+    <div className="grid  grid-cols-1   sm:grid-cols-2  lg:flex lg:px-40 lg-py-12 lg:flex-col gap-6  p-4">
      {error ? (
        <p className='text-red-600 text-center '>Something went Wrong </p>
       ):(allplaces.map((place) => (
         <Link to={`/allplaces/places/${place._id}`}
         key={place._id}
-        className=" cursior-ponter  lg:px-15  rounded-md w-full transform transition duration-300  " >
+        className=" cursior-ponter  lg:px-15  rounded-md   lg:w-full transform transition duration-300  " >
            <div className="w-full  h-60  overflow-hidden rounded-t-md">
            {place.photos?.length > 0 ? (
            
@@ -108,7 +110,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
              src={
                place.photos[0]?.startsWith("http")
                ? place.photos[0]
-               : `${import.meta.env.VITE_API_BASE_URL}/uploads/${place.photos[0]}`
+               : `http://localhost:3000/upload/${place.photos[0]}`
               }
               alt={place.title}
               className="w-full  h-full object-cover rounded-t-md"
@@ -123,9 +125,9 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
             <h2 className="text-lg font-semibold text-gray-900">{place.title}</h2>
             <p className="text-gray-600 text-sm">{place.address}</p>
             <p className="text-gray-700 mt-2  min-h-[50px] text-sm">
-            {place.description.substring(0, 60)}...
+            {place.description.substring(0, 200)}...
             </p>
-            <p className="text-gray-700 mt-2 font-serif text-xs">{place.extraInfo}</p>
+            <p className="text-gray-700 mt-2 font-serif text-xs">{place.extraInfo.substring(0,160)}...</p>
             <p className="text-gray-700 mt-2 font-serif text-sm">
             <strong>Check-in Time:</strong> {place.checkIn}:00
             </p>

@@ -17,7 +17,7 @@ export function UserContextProvider({children}){
         setLoading(true)
         api.get('/profile',{withCredentials:true})
         .then(({data})=>{
-            console.log("Data",data)
+          
             setUser(data)
         })
         .catch((error)=>{

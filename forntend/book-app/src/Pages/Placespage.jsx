@@ -29,7 +29,7 @@ useEffect(()=>{
   {places.length > 0 ? (
     places.map((place) => (
       <Link
-        to={`/allplaces/places/${place._id}`}
+        to={`allplaces/places/${place._id}`}
         key={place._id}
         className="cursor-pointer rounded-md transform transition duration-300"
       >
@@ -38,7 +38,7 @@ useEffect(()=>{
             <img
               src={place.photos[0].startsWith('http')
                 ? place.photos[0]
-                : `${import.meta.env.VITE_API_BASE_URL}/uploads/${place.photos[0]}`}
+                : `http://localhost:3000/upload/${place.photos[0]}`}
               alt={place.title}
               className="w-full h-full object-cover rounded-t-md"
             />
@@ -52,8 +52,8 @@ useEffect(()=>{
             Address:
             <p className="text-gray-800 font-normal text-base">{place.address}</p>
           </span>
-          <p className="text-gray-900 font-serif mt-2 text-sm">{place.description.substring(0, 100)}...</p>
-          <p className="text-gray-700 mt-2 font-serif text-xs">{place.extraInfo}</p>
+          <p className="text-gray-900 font-serif mt-2 text-sm">{place.description.substring(0, 150)}...</p>
+          <p className="text-gray-700 mt-2 font-serif text-xs">{place.extraInfo.substring(0,100)}...</p>
           <p className="text-gray-700 mt-2 font-serif text-sm">
             <strong>Check-in Time:</strong> {place.checkIn}:00
           </p>
