@@ -11,7 +11,7 @@ require('dotenv').config();
 
 const PORT=3000;
 app.use(cors({
-    origin:['https://booking-app-lake-gamma.vercel.app',
+    origin:['',
         "http://localhost:5173",  ],
         credentials:true
     }))

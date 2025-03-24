@@ -7,6 +7,7 @@ const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const path = require('path');
 const Placemodel = require("../database/placeSchema");
+const bucket=require("../firebase-config")
 
 const route=express.Router()
 const saltRounds = 10;
@@ -140,26 +141,60 @@ route.post("/upload-by-links",async (req,res)=>{
 })
 
 // for upload photo
-const storage=multer.diskStorage({
-    destination:function (req,file,cb){
-        cb(null, './upload') 
-    },
-    filename:function(req,file,cb){
-        return cb(null, `${Date.now()}-${file.originalname}`)
+// const storage=multer.diskStorage({
+//     destination:function (req,file,cb){
+//         cb(null, './upload') 
+//     },
+//     filename:function(req,file,cb){
+//         return cb(null, `${Date.now()}-${file.originalname}`)
         
-    }
+//     }
+// })
+const storage=multer({
+    storage:multer.memoryStorage(),
+    limits:{fileSize:5*1024*1024}
 })
 const upload = multer({ storage: storage })
 
 
-route.post("/upload",upload.array("photos",100),(req,res)=>{
+// route.post("/upload",upload.array("photos",100),async(req,res)=>{
+//     try{
+//  const uploadedFiles=[]
+//  for(let i=0; i<req.files.length;i++){
+//     const{filename}=req.files[i]
+//     uploadedFiles.push(filename);
+//     }
+//     res.status(200).json(uploadedFiles);
+//     }catch(error){
+//         console.error("Error processing uploads:", error);
+//         res.status(500).json({
+//         susccess:false,
+//         error: "Upload failed" }); 
+//     }
+
+// })
+
+route.post("/upload",upload.array("photos",100),async(req,res)=>{
     try{
  const uploadedFiles=[]
- for(let i=0; i<req.files.length;i++){
-    const{filename}=req.files[i]
-    uploadedFiles.push(filename);
-    }
-    res.status(200).json(uploadedFiles);
+ for(const file of req.file){
+    const fileName = `${Date.now()}-${file.originalname}`;
+
+    const fileupload=bucket.file(fileName)
+    const stream = fileupload.createWriteStream({
+        metadata: {
+            contentType: file.mimetype
+        }
+    });
+    stream.end(file.buffer);
+    await new Promise((reslove ,reject)=>{
+        stream.on("finsih",reslove)
+        stream.on("error",reject)
+    })
+    const publicurl=`https://storage.googleapis.com/${bucket.name}/${fileName}`;
+    uploadedFiles.push(publicurl);   
+}
+    res.status(200).json({ success: true, files: uploadedFiles });
     }catch(error){
         console.error("Error processing uploads:", error);
         res.status(500).json({
