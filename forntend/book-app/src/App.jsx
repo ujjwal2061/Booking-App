@@ -19,11 +19,11 @@ function App() {
 
 const [user, setUser] = useState(null);
 
-useEffect(() => {
-  api.get('/profile', { withCredentials: true })
-    .then(response => setUser(response.data))
-    .catch(() => setUser(null));
-}, []);
+// useEffect(() => {
+//   api.get('/profile', { withCredentials: true })
+//     .then(response => setUser(response.data))
+//     .catch(() => setUser(null));
+// }, []);
   return (
     <UserContextProvider>
       <BookingcontextProvider>

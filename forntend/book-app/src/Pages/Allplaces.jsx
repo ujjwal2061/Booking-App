@@ -13,8 +13,8 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
       const [error,setError]=useState(false)
       const [currentpage,setCurrnetpage]=useState(1)
       const [totalpage,setTotalpage]=useState(1)
-      console.log("url",import.meta.env.VITE_API_BASE_URL
-      )
+     
+      
       useEffect(()=>{
         setError(true)
         api.get("/allplaces",{
