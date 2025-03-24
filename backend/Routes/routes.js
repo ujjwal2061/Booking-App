@@ -17,7 +17,8 @@ route.get("/allplaces",async(req,res)=>{
     const limit=parseInt(req.query.limit) || 5;
     try{
         const skip=(page-1)*limit
-        const totalPlaces=await Placemodel.countDocunodements()
+        
+        const totalPlaces=await Placemodel.countDocuments()
         const places=await Placemodel.find({})
            .skip(skip)
            .limit(limit)
@@ -141,7 +142,7 @@ route.post("/upload-by-links",async (req,res)=>{
 // for upload photo
 const storage=multer.diskStorage({
     destination:function (req,file,cb){
-        cb(null, './uploads') 
+        cb(null, './upload') 
     },
     filename:function(req,file,cb){
         return cb(null, `${Date.now()}-${file.originalname}`)
