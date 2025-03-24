@@ -1,4 +1,5 @@
 const mongoose=require("mongoose")
+// const mongoose=require("../connection")
 // Schema for the Places
 const placeSchema=new mongoose.Schema({
     owner:{type:mongoose.Schema.Types.ObjectId,ref:'userlist'},

@@ -1,10 +1,10 @@
-const mongoose=require("mongoose")
+ const mongoose=require("mongoose")
 const bcrypt=require("bcryptjs")
+// const mongoose=require("../connection")
 const userData=new mongoose.Schema({
     name:{ type:String, required:true,unique:true},
     email:{ type:String,  required:true, unique:true },
     password:{type:String,required:true},
-    
    },{timestamps:true})
 
 

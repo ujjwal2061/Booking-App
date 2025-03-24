@@ -17,7 +17,7 @@ route.get("/allplaces",async(req,res)=>{
     const limit=parseInt(req.query.limit) || 5;
     try{
         const skip=(page-1)*limit
-        const totalPlaces=await Placemodel.countDocuments()
+        const totalPlaces=await Placemodel.countDocunodements()
         const places=await Placemodel.find({})
            .skip(skip)
            .limit(limit)
@@ -51,7 +51,8 @@ route.post('/register',async (req,res)=>{
         res.cookie("auth_token",token ,{
             httpOnly:true,
             secure:process.env.NODE_ENV==="production",
-            maxAge:10*24*60*60*1000,
+            maxAge: 10 * 24 * 60 * 60 * 1000,
+            // sameSite: "Strict" 
         })
         res.status(201).json({msg:"User created succesfully",user:response,token:token})
     }catch(error){
@@ -91,23 +92,24 @@ route.post('/login',async(req,res)=>{
 
 
 // profile route
-route.get("/profile",(req,res,)=>{
-   const token=req.cookies.auth_token;
-   if (!token) {
-    return res.status(401).json({ msg: "Unauthorized. Please log in." });
-}
-// check the user cookies 
-jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
-    if (err) {
-        return res.status(403).json({ err: "Invalid token. Please log in again." });
+route.get("/profile",async(req,res,)=>{
+    try{
+        const token=req.cookies.auth_token;
+        if (!token) {
+            return res.status(401).json({ msg: "Unauthorized. Please log in." });
+        }
+        // check the user cookies 
+        const decode=jwt.verify(token, process.env.JWT_SECRET)
+        const user=await alluser.findById(decode.id)
+        if(!user){
+            return res.status(404).json({msg:"User not Found"})
+        }
+        res.json({name:user.name,email:user.email,_id:user.id})
+    }catch(error){
+        res.status(403).json({error:"Invalid token. Please log in again."})
     }
-    const {name,email,_id}=await alluser.findById(userdata.id)
- 
-    return res.json({name,email,_id});
-});
-});
 
-
+});
 
 // logout api
 route.post('/logout',(req,res)=>{
@@ -139,7 +141,7 @@ route.post("/upload-by-links",async (req,res)=>{
 // for upload photo
 const storage=multer.diskStorage({
     destination:function (req,file,cb){
-        cb(null, './upload') 
+        cb(null, './uploads') 
     },
     filename:function(req,file,cb){
         return cb(null, `${Date.now()}-${file.originalname}`)
@@ -163,7 +165,7 @@ route.post("/upload",upload.array("photos",100),(req,res)=>{
         susccess:false,
         error: "Upload failed" }); 
     }
-    
+
 })
 route.post('/places',(req,res)=>{
     const token=req.cookies.auth_token;

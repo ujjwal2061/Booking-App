@@ -20,10 +20,14 @@ app.use(cors({
          "http://localhost:5173",  ],
     credentials:true
 }))
+
 const destDir = path.join(__dirname, 'images');
 if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir);
 }
+app.get("/", (req, res) => {
+    res.send("Server is running!");
+});
 app.use(allrouter)
 
 app.listen(PORT,()=>{console.log(`Server is Start at Port ${PORT}`)})
