@@ -28,8 +28,8 @@ app.use(cors({
 app.use(express.json())
 app.use(cookies()); 
 
-app.use('/images', express.static('/tmp/images'))
-app.use('/upload', express.static('/tmp/upload'));
+app.use('/images', express.static('images'))
+app.use('/upload', express.static('upload'));
 
 const tmpImagesDir = path.join('/tmp', 'images');
 const tmpUploadDir = path.join('/tmp', 'upload');

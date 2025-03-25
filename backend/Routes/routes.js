@@ -126,7 +126,7 @@ route.post("/upload-by-links",async (req,res)=>{
     try{
         const  {link}=req.body
         const newname = 'Photo' + Date.now() + '.jpg';
-        const destDir = path.join('/tmp', 'images');
+        const destDir = path.join('/images');
         const options = {
             url: link, 
             dest: path.join(destDir, newname)
@@ -143,7 +143,7 @@ route.post("/upload-by-links",async (req,res)=>{
 // for upload photo
 const storage=multer.diskStorage({
     destination:function (req,file,cb){
-        cb(null, '/tmp/upload') 
+        cb(null, '/upload') 
     },
     filename:function(req,file,cb){
         return cb(null, `${Date.now()}-${file.originalname}`)
