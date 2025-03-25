@@ -44,11 +44,6 @@ app.get("/", (req, res) => {
     res.send("Server is running!");
 });
 app.use(allrouter)
-const __dirname = path.resolve();
-app.use(express.static(path.join(__dirname, 'public')));
-// SPA Fallback Route 
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "index.html"));
-});
+
 
 app.listen(PORT,()=>{console.log(`Server is Start at Port ${PORT}`)})
