@@ -9,9 +9,9 @@ const fs = require('fs');
 const app=express();
 require('dotenv').config();
 
-const PORT=3000;
+const PORT=process.env.PORT||3000;
 app.use(cors({
-    origin:['https://booking-app-ecru-chi.vercel.app'  ],
+    origin:'https://booking-app-ecru-chi.vercel.app' ,
         credentials:true,
         methods:["GET","POST","PUT","DELETE"],
         allowedHeaders:["Content-Type","Authorization"],
