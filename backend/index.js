@@ -19,10 +19,11 @@ app.use(cors({
 app.use(express.json())
 app.use(cookies()); 
 
-app.use('/images', express.static(path.join(__dirname,'images')))
-app.use('/upload', express.static(path.join(__dirname, 'upload')));
+app.use('/images', express.static('/tmp/images'))
+app.use('/upload', express.static('/tmp/upload'));
 
-const destDir = path.join(__dirname, 'images');
+// const destDir = path.join(__dirname, 'images');
+const destDir=process.env.SERVERLESS ?'/tmp/images':path.join(__dirname,'images')
 if (!fs.existsSync(destDir)) {
     fs.mkdirSync(destDir);
 }
