@@ -54,7 +54,7 @@ route.post('/register',async (req,res)=>{
             httpOnly:true,
             secure:process.env.NODE_ENV==="production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
-            // sameSite: "Strict" 
+            sameSite: "none" 
         })
         res.status(201).json({msg:"User created succesfully",user:response,token:token})
     }catch(error){
@@ -79,7 +79,7 @@ route.post('/login',async(req,res)=>{
 }
   const token=generatetoken(payload)
   res.cookie("auth_token",token ,{
-    httpOnly:false,
+    httpOnly:true,
     secure: process.env.NODE_ENV === "production",
     maxAge:10*24*60*60*1000,
 })
