@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-backend/firebase-sdk.json
+backend/firebase1-sdk.json
 
 node_modules
 .env
