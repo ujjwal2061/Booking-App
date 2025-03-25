@@ -1,5 +1,5 @@
 const admin=require("firebase-admin")
-const serveaccout=require("./firebase-sdk.json")
+const serveaccout=require("./firebase1-sdk.json")
 admin.initializeApp({
     credential:admin.credential.cert(serveaccout,{
         project_id: process.env.FIREBASE_PROJECT_ID,
