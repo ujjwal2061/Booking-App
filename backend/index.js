@@ -20,7 +20,7 @@ app.use(cors({
     app.use((req,res,next)=>{
         res.header(
            "Access-Control-Allow-Origin", 
-        "https://booking-20lkoevn2-lazy61s-projects.vercel.app"
+        "https://booking-app-ecru-chi.vercel.app"
         )
         res.header("Access-Control-Allow-Credentials", true)
         next();
