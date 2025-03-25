@@ -22,7 +22,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
           params:{page:currentpage,limit:5}
         })
            .then(response=>{
-            console.log(response.data)
+           
              setAllplaces(response.data.places)
              setTotalpage(response.data.totalpage)
             }).catch(error=>{
