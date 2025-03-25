@@ -110,7 +110,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
              src={
                place.photos[0]?.startsWith("http")
                ? place.photos[0]
-               : `http://localhost:3000/upload/${place.photos[0]}`
+               : `https://booking-app-afjh.vercel.app/upload/${place.photos[0]}`
               }
               alt={place.title}
               className="w-full  h-full object-cover rounded-t-md"

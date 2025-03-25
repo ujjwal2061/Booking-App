@@ -55,8 +55,8 @@ export default function Photoupload({setPhotos}){
               {addPhoto.length > 0 && addPhoto.map((link, index) => (
                   <div key={index} className="py-2 px-2 ">
                  <img   src={link.includes('http') ? link : 
-                     (link.includes('.jpg') ? `http://localhost:3000/images/${link}` : 
-                      `http://localhost:3000/upload/${link}`)}
+                     (link.includes('.jpg') ? `https://booking-app-afjh.vercel.app/images/${link}` : 
+                      `https://booking-app-afjh.vercel.app/upload/${link}`)}
                 alt="Uploaded" 
                 className="w-36 h-40 object-cover rounded-lg"  />
             </div>

@@ -24,7 +24,7 @@ export default function PlaceDetails() {
       <div className="w-full">
       <img src={ data.photos[0].startsWith("http")
               ? data.photos[0]
-              : `http://localhost:3000/upload/${data.photos[0]}` }alt={data.title}
+              : `https://booking-app-afjh.vercel.app/upload/${data.photos[0]}` }alt={data.title}
             className="w-full h-auto object-contain rounded-md" />
       </div>
       <div className="mt-4">
