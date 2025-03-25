@@ -126,7 +126,7 @@ route.post("/upload-by-links",async (req,res)=>{
     try{
         const  {link}=req.body
         const newname = 'Photo' + Date.now() + '.jpg';
-        const destDir = path.join(__dirname, '../images');
+        const destDir = path.join('/tmp', 'images');
         const options = {
             url: link, 
             dest: path.join(destDir, newname)
@@ -143,7 +143,7 @@ route.post("/upload-by-links",async (req,res)=>{
 // for upload photo
 const storage=multer.diskStorage({
     destination:function (req,file,cb){
-        cb(null, './upload') 
+        cb(null, '/tmp/upload') 
     },
     filename:function(req,file,cb){
         return cb(null, `${Date.now()}-${file.originalname}`)
@@ -163,7 +163,7 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
     }
     res.status(200).json(uploadedFiles);
     }catch(error){
-        console.error("Error processing uploads:", error);
+        
         res.status(500).json({
         susccess:false,
         error: "Upload failed" }); 

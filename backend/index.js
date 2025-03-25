@@ -13,7 +13,10 @@ const PORT=3000;
 app.use(cors({
     origin:['',
         "http://localhost:5173",  ],
-        credentials:true
+        credentials:true,
+        methods:["GET","POST","PUT","DELETE"],
+        allowedHeaders:["Contenty-Type","Authorization"],
+
     }))
     
 app.use(express.json())
@@ -22,10 +25,14 @@ app.use(cookies());
 app.use('/images', express.static('/tmp/images'))
 app.use('/upload', express.static('/tmp/upload'));
 
-// const destDir = path.join(__dirname, 'images');
-const destDir=process.env.SERVERLESS ?'/tmp/images':path.join(__dirname,'images')
-if (!fs.existsSync(destDir)) {
-    fs.mkdirSync(destDir);
+const tmpImagesDir = path.join('/tmp', 'images');
+const tmpUploadDir = path.join('/tmp', 'upload');
+
+if (!fs.existsSync(tmpImagesDir)) {
+  fs.mkdirSync(tmpImagesDir);
+}
+if (!fs.existsSync(tmpUploadDir)) {
+  fs.mkdirSync(tmpUploadDir);
 }
 app.get("/", (req, res) => {
     res.send("Server is running!");
