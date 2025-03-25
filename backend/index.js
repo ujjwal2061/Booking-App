@@ -11,8 +11,7 @@ require('dotenv').config();
 
 const PORT=3000;
 app.use(cors({
-    origin:['https://booking-app-ecru-chi.vercel.app/',
-        "http://localhost:5173",  ],
+    origin:['https://booking-app-ecru-chi.vercel.app'  ],
         credentials:true,
         methods:["GET","POST","PUT","DELETE"],
         allowedHeaders:["Content-Type","Authorization"],
