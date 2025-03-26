@@ -54,7 +54,8 @@ route.post('/register',async (req,res)=>{
             httpOnly:true,
             secure:process.env.NODE_ENV==="production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
-            sameSite: "none" 
+            sameSite: "None", 
+            domain:".vercel.app"
         })
         res.status(201).json({msg:"User created succesfully",user:response,token:token})
     }catch(error){
@@ -82,6 +83,7 @@ route.post('/login',async(req,res)=>{
     httpOnly:true,
     secure: process.env.NODE_ENV === "production",
     maxAge:10*24*60*60*1000,
+    sameSite:"None"
 })
    res.json({token ,user:user})
     }catch(error){

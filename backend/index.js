@@ -17,15 +17,19 @@ app.use(cors({
         allowedHeaders:["Content-Type","Authorization"],
 
     }))
-    app.use((req,res,next)=>{
-        res.header(
-           "Access-Control-Allow-Origin", 
-        "https://booking-app-ecru-chi.vercel.app"
-        )
-        res.header("Access-Control-Allow-Credentials", true)
-        next();
-    });
-app.use(express.json())
+  app.use((req,res,next)=>{
+    res.header('Access-Control-Allow-Origin',req.headers.origin)
+    res.header('Access-control-Allow-Credentials',true)
+    res.header('Acess-Contorl-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers','Content-Type,Authorization,Content-Length,X-Requested-with')
+ if('OPTIONS'==req.method){
+  res.sendStatus(200)
+ }else{
+  next()
+ }
+  })
+
+  app.use(express.json())
 app.use(cookies()); 
 
 app.use('/images', express.static('images'))
