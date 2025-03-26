@@ -24,7 +24,7 @@ export default function PlaceDetails() {
       <div className="w-full">
       <img src={ data.photos[0].startsWith("http")
               ? data.photos[0]
-              : `https://booking-app-ecru-chi.vercel.app/upload/${data.photos[0]}` }alt={data.title}
+              : `https://booking-app-afjh.vercel.app/upload/${data.photos[0]}` }alt={data.title}
             className="w-full h-auto object-contain rounded-md" />
       </div>
       <div className="mt-4">
@@ -63,7 +63,7 @@ export default function PlaceDetails() {
             <img 
             src={photo.startsWith("http")
                 ? photo
-                : `https://booking-app-ecru-chi.vercel.app/upload/${photo}` }alt={data.title}
+                : `https://booking-app-afjh.vercel.app/upload/${photo}` }alt={data.title}
               className="w-full h-auto object-contain rounded-md" />
           </div>
           ))}
