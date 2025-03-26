@@ -127,6 +127,9 @@ route.post('/logout',(req,res)=>{
 route.post("/upload-by-links",async (req,res)=>{
     try{
         const  {link}=req.body
+        if (!link?.match(/^https?:\/\/.+\/.+\.(avif|png|jpg|jpeg|webp)(\?.*)?$/i)) {
+            return res.status(400).json({ error: "Invalid image URL" });
+          }
         const newname = 'Photo' + Date.now() + '.jpg';
         const destDir = path.join(tmpDir,'images');
         const options = {
@@ -153,7 +156,22 @@ const storage=multer.diskStorage({
     }
 })
 
-const upload = multer({ storage: storage })
+const upload = multer({ storage: storage ,
+    limits:{fileSize:10*1024*1024}, //10MB file size
+    fileFilter:(req,file,cb)=>{
+        const allowedTypefiles=[
+            'image/avif',
+            'image/png',
+            'image/jpeg',
+            'image/webp'
+        ]
+        if(allowedTypefiles.includes(file.mimetype)){
+            cb(null,true);
+        }else{
+            cb(new Error('Invalid File type'))
+        }
+    }
+})
 
 
 route.post("/upload",upload.array("photos",100),async(req,res)=>{
