@@ -7,7 +7,7 @@ const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const path = require('path');
 const Placemodel = require("../database/placeSchema");
-
+const tmpDir=require('os').tmpdir()
 
 const route=express.Router()
 const saltRounds = 10;
@@ -128,7 +128,7 @@ route.post("/upload-by-links",async (req,res)=>{
     try{
         const  {link}=req.body
         const newname = 'Photo' + Date.now() + '.jpg';
-        const destDir = path.join('/images');
+        const destDir = path.join(tmpDir,'images');
         const options = {
             url: link, 
             dest: path.join(destDir, newname)
@@ -145,7 +145,7 @@ route.post("/upload-by-links",async (req,res)=>{
 // for upload photo
 const storage=multer.diskStorage({
     destination:function (req,file,cb){
-        cb(null, '/upload') 
+        cb(null, path.join(tmpDir, 'upload')) 
     },
     filename:function(req,file,cb){
         return cb(null, `${Date.now()}-${file.originalname}`)
