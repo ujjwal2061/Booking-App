@@ -1,10 +1,9 @@
-
  import React, { useCallback, useContext, useEffect, useState } from 'react'
  import {debounce} from "lodash"
  import { CiSearch } from "react-icons/ci";
- import axios from 'axios'
  import { Link } from 'react-router';
   import api from "../api"
+  import { BiLoaderAlt } from 'react-icons/bi';
 import { Bookingcontext } from '../UserContext/Bookingcontext';
  export default function Allplaces(){
       const [allplaces,setAllplaces]=useState([])
@@ -13,22 +12,22 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
       const [error,setError]=useState(false)
       const [currentpage,setCurrnetpage]=useState(1)
       const [totalpage,setTotalpage]=useState(1)
-     
+      const [loading,setLoading]=useState(false)
       
       useEffect(()=>{
-        setError(true)
+        setLoading(true)
         api.get("/allplaces",{
           withCredentials: true,
           params:{page:currentpage,limit:5}
         })
            .then(response=>{
-           
              setAllplaces(response.data.places)
              setTotalpage(response.data.totalpage)
             }).catch(error=>{
               setError(error)
               
             }).finally(()=>{
+              setLoading(fasle)
               setError(false)
             })
           },[currentpage])
@@ -97,8 +96,8 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
         </div>
       </div>
     <div className="grid  grid-cols-1   sm:grid-cols-2  lg:flex lg:px-40 lg-py-12 lg:flex-col gap-6  p-4">
-     {error ? (
-       <p className='text-red-600 text-center '>Something went Wrong </p>
+     {loading ? (
+       <p className='text-gray-800 text-center '>Geeting Your place <BiLoaderAlt /> </p>
       ):(allplaces.map((place) => (
         <Link to={`/allplaces/places/${place._id}`}
         key={place._id}
@@ -137,6 +136,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
           ))
         )}
   </div>
+   {error &&<p className='text-red-600 text-center'>{error.msg}</p>}
   <div className=' flex  flex-row justify-center items-center gap-5 py-2 px-7'>
     <button onClick={backpage}
     disabled={currentpage === 1}

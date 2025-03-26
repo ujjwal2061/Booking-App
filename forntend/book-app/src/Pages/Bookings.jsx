@@ -15,7 +15,7 @@ export  default function(){
                           <img
                               src={place.photos[0].startsWith('http')
                                   ? place.photos[0]
-                                  : `${import.meta.env.VITE_API_BASE_URL}/uploads/${place.photos[0]}`}
+                                  : `https://booking-app-afjh.vercel.app/uploads/${place.photos[0]}`}
                               alt={place.title}
                               className="w-full h-full object-cover rounded-t-md"
                           />

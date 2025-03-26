@@ -13,7 +13,7 @@ export default function Photoupload({setPhotos}){
                 const newphoto=response.data;
                  setaddPhoto((prev) => [...prev, newphoto]); /// -> slove the error at that photos store at inside array od the array 
                  setPhotos((prev) => [...prev, newphoto]);
-                 console.log(newphoto)
+               
                     setLink("")
                 }catch(error){
                     console.error("Upload failed:", error.response ? error.response.data : error.message);
@@ -30,7 +30,7 @@ export default function Photoupload({setPhotos}){
         api.post('/upload',data,{
         }).then((response)=>{
             const {data:newphoto}=response;
-            console.log(newphoto)
+
             setaddPhoto((prev) => [...prev, newphoto]); // -> slove the error at that photos store at inside array od the array 
             setPhotos((prev) => [...prev, ...newphoto]);
         }).catch((error)=>{

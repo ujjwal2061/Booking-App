@@ -6,24 +6,18 @@ import Home from './Pages/Home';
 import Account from './Pages/Account';
 import Layout from './Section/Layout';
 import Register from './Pages/Register';
-import axios from 'axios';
  import { UserContextProvider } from './UserContext/usercontext';
- import PlacesPage from './Pages/Placespage';
- import PlaceFrom from './Pages/PlaceForm';
- import Bookings from './Pages/Bookings';
- import PlaceDetails from './Pages/PlaceDetails';
+import PlacesPage from './Pages/Placespage';
+import PlaceFrom from './Pages/PlaceForm';
+import Bookings from './Pages/Bookings';
+import PlaceDetails from './Pages/PlaceDetails';
 import Allplaces from './Pages/Allplaces';
 import {  BookingcontextProvider } from './UserContext/Bookingcontext';
-import api from "./api"
 function App() {
 
 const [user, setUser] = useState(null);
 
-// useEffect(() => {
-//   api.get('/profile', { withCredentials: true })
-//     .then(response => setUser(response.data))
-//     .catch(() => setUser(null));
-// }, []);
+
   return (
     <UserContextProvider>
       <BookingcontextProvider>
