@@ -9,12 +9,13 @@ const fs = require('fs');
 const app=express();
 require('dotenv').config();
 
-const PORT=process.env.PORT||3000;
+const PORT="https://booking-app-ecru-chi.vercel.app"||3000;
 app.use(cors({
     origin:'https://booking-app-ecru-chi.vercel.app' ,
         credentials:true,
         methods:["GET","POST","PUT","DELETE"],
         allowedHeaders:["Content-Type","Authorization"],
+        exposedHeaders: ["Content-Type","Authorization","Set-Cookie"]
 
     }))
   app.use((req,res,next)=>{
@@ -32,9 +33,24 @@ app.use(cors({
   app.use(express.json())
 app.use(cookies()); 
 
-app.use('/images', express.static('images'))
-app.use('/upload', express.static('upload'));
+// app.use('/images', express.static('images'))
+// app.use('/upload', express.static('upload'));
 
+app.use('/images', express.static(path.join(__dirname, 'images'), {
+  setHeaders: (res) => {
+    res.set('Access-Control-Allow-Origin', 'https://booking-app-ecru-chi.vercel.app');
+  }
+}));
+
+app.use('/upload', express.static(path.join(__dirname, 'upload'), {
+  setHeaders: (res, path) => {
+    res.set('Access-Control-Allow-Origin', 'https://booking-app-ecru-chi.vercel.app');
+    if (path.endsWith('.avif')) {
+      res.set('Content-Type', 'image/avif');
+    }
+  }
+})
+);
 const tmpImagesDir = path.join('/tmp', 'images');
 const tmpUploadDir = path.join('/tmp', 'upload');
 
