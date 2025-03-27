@@ -177,6 +177,7 @@ const upload = multer({ storage: storage ,
 route.post("/upload",upload.array("photos",100),async(req,res)=>{
     try{
  const uploadedFiles=[]
+ console.log('Uploaded Files:', req.files);
  for(let i=0; i<req.files.length;i++){
     const{filename}=req.files[i]
     uploadedFiles.push(filename);

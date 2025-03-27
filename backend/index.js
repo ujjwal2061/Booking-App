@@ -16,11 +16,11 @@ app.use(cors({
         credentials:true,
         methods:["GET","POST","PUT","DELETE"],
         allowedHeaders:["Content-Type","Authorization"],
-        exposedHeaders: ["Content-Type","Authorization","Set-Cookie"]
+        exposedHeaders: ["Set-Cookie"]
 
     }))
   app.use((req,res,next)=>{
-    res.header('Access-Control-Allow-Origin',req.headers.origin)
+    res.header('Access-Control-Allow-Origin','https://hoomy.vercel.app')
     res.header('Access-control-Allow-Credentials',true)
     res.header('Acess-Contorl-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS');
     res.header('Access-Control-Allow-Headers','Content-Type,Authorization,Content-Length,X-Requested-with')
@@ -31,26 +31,25 @@ app.use(cors({
  }
   })
 
-  app.use(express.json())
+app.use(express.json())
 app.use(cookies()); 
-
-
 
 app.use('/images', express.static(path.join(__dirname, 'images'), {
   setHeaders: (res) => {
-    res.set('Access-Control-Allow-Origin', 'https://hoomy.vercel.app/');
+    res.set('Access-Control-Allow-Origin', 'https://hoomy.vercel.app');
   }
 }));
 
 app.use('/upload', express.static(path.join(__dirname, 'upload'), {
   setHeaders: (res, path) => {
-    res.set('Access-Control-Allow-Origin', 'https://hoomy.vercel.app/');
+    res.set('Access-Control-Allow-Origin', 'https://hoomy.vercel.app');
     if (path.endsWith('.avif')) {
       res.set('Content-Type', 'image/avif');
     }
   }
 })
 );
+// Temporary Directories
 const tmpImagesDir = path.join(tmpDir, 'images');
 const tmpUploadDir = path.join(tmpDir, 'upload');
 
@@ -60,10 +59,15 @@ if (!fs.existsSync(tmpImagesDir)) {
 if (!fs.existsSync(tmpUploadDir)) {
   fs.mkdirSync(tmpUploadDir);
 }
+//Deafult Route of Sever
 app.get("/", (req, res) => {
     res.send("Server is running!");
 });
+// All Route
 app.use(allrouter)
-
+// SPA Fallback Route
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "public", "index.html"));
+});
 
 app.listen(PORT,()=>{console.log(`Server is Start at Port ${PORT}`)})
