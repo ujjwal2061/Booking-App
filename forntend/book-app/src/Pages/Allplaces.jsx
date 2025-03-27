@@ -27,7 +27,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
               setError(error)
               
             }).finally(()=>{
-              setLoading(fasle)
+              setLoading(false)
               setError(false)
             })
           },[currentpage])
