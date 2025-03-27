@@ -97,7 +97,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
       </div>
     <div className="grid  grid-cols-1   sm:grid-cols-2  lg:flex lg:px-40 lg-py-12 lg:flex-col gap-6  p-4">
      {loading ? (
-       <p className='text-gray-800 text-center '>Geeting Your place <BiLoaderAlt /> </p>
+       <p className='text-gray-800 text-center flex flex-row  '>Geeting Your place <BiLoaderAlt className="animate-spin" /> </p>
       ):(allplaces.map((place) => (
         <Link to={`/allplaces/places/${place._id}`}
         key={place._id}
