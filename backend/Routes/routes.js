@@ -7,7 +7,7 @@ const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const path = require('path');
 const Placemodel = require("../database/placeSchema");
-const tmpDir=require('os').tmpdir()
+
 
 const route=express.Router()
 const saltRounds = 10;
@@ -131,7 +131,7 @@ route.post("/upload-by-links",async (req,res)=>{
             return res.status(400).json({ error: "Invalid image URL" });
           }
         const newname = 'Photo' + Date.now() + '.jpg';
-        const destDir = path.join(tmpDir,'images');
+        const destDir = path.join('/tmp','images');
         const options = {
             url: link, 
             dest: path.join(destDir, newname)
@@ -148,7 +148,7 @@ route.post("/upload-by-links",async (req,res)=>{
 // for upload photo
 const storage=multer.diskStorage({
     destination:function (req,file,cb){
-        cb(null, path.join(tmpDir, 'upload')) 
+        cb(null, path.join('/tmp', 'upload')) 
     },
     filename:function(req,file,cb){
         return cb(null, `${Date.now()}-${file.originalname}`)

@@ -43,6 +43,7 @@ app.use('/images', express.static(path.join(__dirname, 'images'), {
 app.use('/upload', express.static(path.join(__dirname, 'upload'), {
   setHeaders: (res, path) => {
     res.set('Access-Control-Allow-Origin', 'https://hoomy.vercel.app');
+    res.set('Access-Control-Allow-Credentials', 'true');
     if (path.endsWith('.avif')) {
       res.set('Content-Type', 'image/avif');
     }
