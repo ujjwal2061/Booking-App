@@ -176,7 +176,7 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
         
         res.status(500).json({
         susccess:false,
-        error: "Upload failed" }); 
+        error: "Upload failed",error }); 
     }
 
 })
