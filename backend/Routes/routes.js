@@ -183,39 +183,54 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
 })
 
 
-route.post('/places',(req,res)=>{
-    const token=req.cookies.auth_token;
+route.post('/places', (req, res) => {
+    const token = req.cookies.auth_token;
+    if (!token) return res.status(401).json({ error: "No authentication token provided" });
 
-    if (!token) {
-        return res.status(401).json({ error: "No authentication token provided" });
-    }
     jwt.verify(token, process.env.JWT_SECRET, {}, async (err, userdata) => {
-        if (err) {
-            return res.status(403).json({
-                susccess:false,
-                 err: "Invalid token. Please log in again." });
-        }
-        try{  
+        if (err) return res.status(403).json({ success: false, err: "Invalid token" });
+
+        try {
             const {
-                title,address,photos,
-                perks,extraInfo, description,
-                checkIn, checkout,maxGuests
-            }=req.body   
-            const placeInfo= await Placemodel.create({
-                owner:userdata.id, 
-                title,address,photos:photos, // -> fix the error of here that MissMatch name of the Photos  
-                perks:perks,extraInfo, description,
-                checkIn, checkout,maxGuests
-            }) 
-          
-            res.json(placeInfo)
-        }catch(error){
+                title, address, photos,
+                perks, extraInfo, description,
+                checkIn, checkout, maxGuests
+            } = req.body;
+
+            // Process photos to match schema format
+            const processedPhotos = Array.isArray(photos)
+                ? photos.map(photo => ({
+                    public_id: photo.public_id || 'default_public_id', // Add default or require from client
+                    url: typeof photo === 'string' ? photo : photo.url
+                }))
+                : [{  // Handle single photo case
+                    public_id: photos.public_id || 'default_public_id',
+                    url: typeof photos === 'string' ? photos : photos.url
+                }];
+
+            const placeInfo = await Placemodel.create({
+                owner: userdata.id,
+                title,
+                address,
+                photos: processedPhotos,
+                perks: Array.isArray(perks) ? perks : [perks],
+                extraInfo,
+                description,
+                checkIn,
+                checkout,
+                maxGuests
+            });
+
+            res.json(placeInfo);
+        } catch (error) {
             res.status(500).json({
                 success: false,
-                msg:"Error",error})
+                msg: "Error creating place",
+                error: error.message
+            });
         }
     });
-})
+});
 // for the place fetching
 route.get("/places",(req,res)=>{
     const token=req.cookies.auth_token;
