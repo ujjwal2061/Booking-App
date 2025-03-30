@@ -24,8 +24,8 @@ export default function PlaceDetails() {
       <div className="w-full">
     
              <img
-             src={place.photos?.[0]?.url}
-              alt={place.title}
+             src={data.photos?.[0]?.url}
+              alt={data.title}
               className="w-full  h-full object-cover rounded-t-md"
               onError={(e) => {
                 e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
@@ -63,12 +63,12 @@ export default function PlaceDetails() {
    
       {data.photos.length > 1 && (
         <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
-          {data.photos.slice(1).map((place, index) => (
+          {data.photos.slice(1).map((photo, index) => (
             <div className="break-inside-avoid" key={index}>   
             
              <img
-             src={place.photos?.url}
-              alt={place.title}
+             src={photo.url}
+              alt={data.title}
               className="w-full  h-full object-cover rounded-t-md"
               onError={(e) => {
                 e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
