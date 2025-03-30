@@ -31,7 +31,7 @@ export default function Photoupload({setPhotos}){
         }).then((response)=>{
             const {data:newphoto}=response;
 
-            setaddPhoto((prev) => [...prev, ...newphoto]); // -> slove the error at that photos store at inside array od the array 
+            setaddPhoto((prev) => [...prev, newphoto]); // -> slove the error at that photos store at inside array od the array 
             setPhotos((prev) => [...prev, ...newphoto]);
         }).catch((error)=>{
             console.log("Error at Upload",error);
