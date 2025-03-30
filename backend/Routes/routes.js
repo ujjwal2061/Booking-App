@@ -166,7 +166,10 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
       folder:"bolg-images", 
       resource_type: "auto" 
     })
-    uploadedFiles.push({public_id:uplodImages.public_id,url:secure_url});
+    uploadedFiles.push({
+        public_id:uplodImages.public_id,
+        url:uplodImages.ressecure_url
+    });
     }
     res.status(200).json(uploadedFiles);
     }catch(error){
