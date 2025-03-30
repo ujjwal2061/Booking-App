@@ -159,7 +159,7 @@ const upload = multer({ storage: storage ,
 route.post("/upload",upload.array("photos",100),async(req,res)=>{
     try{
  const uploadedFiles=[]
- for(file of req.files){
+ for(const file of req.files){
     const b64 = Buffer.from(file.buffer).toString("base64");
     const dataURI = "data:" + file.mimetype + ";base64," + b64;
     const uplodImages=await cloudstore.uploader.upload(dataURI,{
@@ -168,7 +168,7 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
     })
     uploadedFiles.push({
         public_id:uplodImages.public_id,
-        url:uplodImages.ressecure_url
+        url:uplodImages.secure_url
     });
     }
     res.status(200).json(uploadedFiles);
