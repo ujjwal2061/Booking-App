@@ -63,7 +63,7 @@ export default function PlaceDetails() {
    
       {data.photos.length > 1 && (
         <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
-          {data.photos.slice(1).map((photo, index) => (
+          {data.photos.slice(1).map((place, index) => (
             <div className="break-inside-avoid" key={index}>   
             
              <img
