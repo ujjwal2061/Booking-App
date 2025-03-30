@@ -1,4 +1,4 @@
-const cloud=require("cloudinary").vs;
+const cloud=require("cloudinary").v2;
 
 cloud.config({
     cloud_name:process.env.CLOUD_NAME,

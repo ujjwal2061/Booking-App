@@ -1,14 +1,12 @@
 const express=require("express")
 const bcrypt = require('bcryptjs');
-const download=require("image-downloader")
 const alluser=require("../database/userSchema")
 const {generatetoken} =require("../auth/jwt")
 const jwt=require("jsonwebtoken")
 const multer = require('multer');
-const path = require('path');
 const Placemodel = require("../database/placeSchema");
 const cloudstore=require("../cloud/cloudainary");
-const { publicDecrypt } = require("crypto");
+
 
 const route=express.Router()
 const saltRounds = 10;
