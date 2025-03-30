@@ -80,6 +80,20 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
           return allBooking
         })
       }
+      const getImageUrl = (photo) => {
+        if (!photo) return ""; // Guard against null/undefined
+        
+        if (typeof photo === "string") {
+          return photo;
+        }
+        
+        if (photo.url) {
+          return photo.url;
+        }
+        
+       
+        return "";
+      };
       return(
     <section className='px-3 py-7'>
       <div className='flex py-2   justify-center  items-center w-full'>
@@ -107,9 +121,12 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
            
              <img
              src={
-               place.photos[0]?.startsWith("http")
+                typeof place.photos[0]==="string"
+               ?(place.photo[0].includes("http")
                ? place.photos[0]
-               : `https://booking-app-afjh.vercel.app/upload/${place.photos[0]}`
+               : `https://booking-app-afjh.vercel.app/upload/${place.photos[0]}`):(
+                (place.photos[0]?.url || "https://booking-app-afjh.vercel.app/default-image.jpg")
+               )
               }
               alt={place.title}
               className="w-full  h-full object-cover rounded-t-md"
