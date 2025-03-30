@@ -34,8 +34,21 @@ export default function Photoupload({setPhotos}){
             console.log("Error at Upload",error);
     
         })
-          
     }
+        const getImageUrl = (photo) => {
+            if (!photo) return ""; // Guard against null/undefined
+            
+            if (typeof photo === "string") {
+              return photo;
+            }
+            
+            if (photo.url) {
+              return photo.url;
+            }
+            
+           
+            return "";
+          };
     return(
         <>
          <h2 className="text-xl mt-2  font-serif">Photo</h2>
@@ -49,11 +62,9 @@ export default function Photoupload({setPhotos}){
               </div>
         
                   <div className="mt-2 grid items-center  grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
-              {addPhoto.length > 0 && addPhoto.map((link, index) => (
+              {addPhoto.length > 0 && addPhoto.map((photo, index) => (
                   <div key={index} className="py-2 px-2 ">
-                 <img   src={link.includes('http') ? link : 
-                     (link.includes('.jpg') ? `https://booking-app-afjh.vercel.app/images/${link}` : 
-                      `https://booking-app-afjh.vercel.app/upload/${link}`)}
+                 <img    src={getImageUrl(photo)}
                 alt="Uploaded" 
                 className="w-36 h-40 object-cover rounded-lg"  />
             </div>
