@@ -200,7 +200,7 @@ route.post('/places',(req,res)=>{
                 title,address,photos,
                 perks,extraInfo, description,
                 checkIn, checkout,maxGuests
-            }=req.body
+            }=req.body   
             const placeInfo= await Placemodel.create({
                 owner:userdata.id, 
                 title,address,photos:photos, // -> fix the error of here that MissMatch name of the Photos  

@@ -5,7 +5,11 @@ const placeSchema=new mongoose.Schema({
     owner:{type:mongoose.Schema.Types.ObjectId,ref:'userlist'},
     title:{type:String},
     address:{type:String},
-    photos:[{type:String}],
+    photos:[
+        {
+            public_id:String,
+            url:String,
+        }],
     description:{type:String},
     perks:[{type:String}],
     extraInfo:{type:String},
