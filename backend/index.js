@@ -10,7 +10,7 @@ const fs = require('fs');
 const app=express();
 require('dotenv').config();
 
-const PORT="https://hoomy.vercel.app"||3000;
+const PORT=process.env.PORT||3000;
 app.use(cors({
     origin:'https://hoomy.vercel.app' ,
         credentials:true,
@@ -19,18 +19,7 @@ app.use(cors({
         exposedHeaders: ["Set-Cookie"]
 
     }))
-  app.use((req,res,next)=>{
-    res.header('Access-Control-Allow-Origin','https://hoomy.vercel.app')
-    res.header('Access-control-Allow-Credentials',true)
-    res.header('Acess-Contorl-Allow-Methods','GET,PUT,POST,DELETE,OPTIONS');
-    res.header('Access-Control-Allow-Headers','Content-Type,Authorization,Content-Length,X-Requested-with')
- if('OPTIONS'==req.method){
-  res.sendStatus(200)
- }else{
-  next()
- }
-  })
-
+ 
 app.use(express.json())
 app.use(cookies()); 
 
