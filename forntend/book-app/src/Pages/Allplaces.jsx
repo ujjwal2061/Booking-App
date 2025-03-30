@@ -80,20 +80,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
           return allBooking
         })
       }
-      const getImageUrl = (photo) => {
-        if (!photo) return ""; // Guard against null/undefined
-        
-        if (typeof photo === "string") {
-          return photo;
-        }
-        
-        if (photo.url) {
-          return photo.url;
-        }
-        
-       
-        return "";
-      };
+ 
       return(
     <section className='px-3 py-7'>
       <div className='flex py-2   justify-center  items-center w-full'>
