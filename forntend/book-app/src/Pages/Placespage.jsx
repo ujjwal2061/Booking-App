@@ -36,11 +36,13 @@ useEffect(()=>{
         <div className="w-full h-52 md:h-60 lg:h-[400px] overflow-hidden rounded-t-md">
           {place.photos?.length > 0 ? (
             <img
-              src={place.photos[0].startsWith('http')
-                ? place.photos[0]
-                : `https://booking-app-afjh.vercel.app/upload/${place.photos[0]}`}
-              alt={place.title}
-              className="w-full h-full object-cover rounded-t-md"
+            src={place.photos?.[0]?.url}
+            alt={place.title}
+            className="w-full  h-full object-cover rounded-t-md"
+            onError={(e) => {
+              e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
+            }}
+
             />
           ) : (
             <p className="text-center text-gray-500">No Image</p>

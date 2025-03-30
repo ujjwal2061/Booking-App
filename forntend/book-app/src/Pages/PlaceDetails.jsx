@@ -22,10 +22,15 @@ export default function PlaceDetails() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <div className="w-full">
-      <img src={ data.photos[0].startsWith("http")
-              ? data.photos[0]
-              : `https://booking-app-afjh.vercel.app/upload/${data.photos[0]}` }alt={data.title}
-            className="w-full h-auto object-contain rounded-md" />
+    
+             <img
+             src={place.photos?.[0]?.url}
+              alt={place.title}
+              className="w-full  h-full object-cover rounded-t-md"
+              onError={(e) => {
+                e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
+              }}
+              />
       </div>
       <div className="mt-4">
         <h1 className="text-2xl font-semibold text-gray-800">{data.title}</h1>
@@ -60,11 +65,15 @@ export default function PlaceDetails() {
         <div className="mt-6 grid grid-cols-2 md:grid-cols-3 gap-3">
           {data.photos.slice(1).map((photo, index) => (
             <div className="break-inside-avoid" key={index}>   
-            <img 
-            src={photo.startsWith("http")
-                ? photo
-                : `https://booking-app-afjh.vercel.app/upload/${photo}` }alt={data.title}
-              className="w-full h-auto object-contain rounded-md" />
+            
+             <img
+             src={place.photos?.url}
+              alt={place.title}
+              className="w-full  h-full object-cover rounded-t-md"
+              onError={(e) => {
+                e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
+              }}
+              />
           </div>
           ))}
         </div>

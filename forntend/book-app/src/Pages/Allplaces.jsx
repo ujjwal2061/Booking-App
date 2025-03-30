@@ -53,6 +53,7 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
                   withCredentials: true,
             });
             setAllplaces(response.data.result); 
+            console.log("Logo ",response.data.result)
           } catch (error) {
             console.log("Can't Fetch the Data", error);
           }
@@ -107,16 +108,12 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
            {place.photos?.length > 0 ? (
            
              <img
-             src={
-                typeof place.photos[0]==="string"
-               ?(place.photo[0].includes("http")
-               ? place.photos[0]
-               : `https://booking-app-afjh.vercel.app/upload/${place.photos[0]}`):(
-                (place.photos[0]?.url || "https://booking-app-afjh.vercel.app/default-image.jpg")
-               )
-              }
+             src={place.photos?.[0]?.url}
               alt={place.title}
               className="w-full  h-full object-cover rounded-t-md"
+              onError={(e) => {
+                e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
+              }}
               />
             ) : (
               <div className="w-full h-48 flex items-center justify-center ">
