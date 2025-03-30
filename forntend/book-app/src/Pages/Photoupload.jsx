@@ -9,8 +9,8 @@ export default function Photoupload({setPhotos}){
         const  uploadphotobylink=async(e)=>{
             e.preventDefault()
             try{
-                const response=await  axios.post('/upload-by-links' ,{link:photolnik})
-                const newphoto=response.data;
+                const response=await  api.post('/upload-by-links' ,{link:photolnik})
+                const {data:newphoto}=response;
                  setaddPhoto((prev) => [...prev, newphoto]); /// -> slove the error at that photos store at inside array od the array 
                  setPhotos((prev) => [...prev, newphoto]);
                
@@ -31,7 +31,7 @@ export default function Photoupload({setPhotos}){
         }).then((response)=>{
             const {data:newphoto}=response;
 
-            setaddPhoto((prev) => [...prev, newphoto]); // -> slove the error at that photos store at inside array od the array 
+            setaddPhoto((prev) => [...prev, ...newphoto]); // -> slove the error at that photos store at inside array od the array 
             setPhotos((prev) => [...prev, ...newphoto]);
         }).catch((error)=>{
             console.log("Error at Upload",error);
