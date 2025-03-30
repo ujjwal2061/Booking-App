@@ -163,7 +163,7 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
     const b64 = Buffer.from(file.buffer).toString("base64");
     const dataURI = "data:" + file.mimetype + ";base64," + b64;
     const uplodImages=await cloudstore.uploader.upload(dataURI,{
-      folder:"bolg-images", 
+      folder:"blog-images", 
       resource_type: "auto" 
     })
     uploadedFiles.push({
@@ -176,7 +176,8 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
         
         res.status(500).json({
         susccess:false,
-        error: "Upload failed",error }); 
+        error: "Upload failed",
+        error: error.message }); 
     }
 
 })
