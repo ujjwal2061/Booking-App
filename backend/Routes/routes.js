@@ -7,7 +7,8 @@ const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const path = require('path');
 const Placemodel = require("../database/placeSchema");
-
+const cloudstore=require("../cloud/cloudainary");
+const { publicDecrypt } = require("crypto");
 
 const route=express.Router()
 const saltRounds = 10;
@@ -90,11 +91,6 @@ route.post('/login',async(req,res)=>{
         res.status(500).json({msg:"Server error"})
     }
 })
-
-
-
-
-
 // profile route
 route.get("/profile",async(req,res,)=>{
     try{
@@ -130,15 +126,12 @@ route.post("/upload-by-links",async (req,res)=>{
         if (!link?.match(/^https?:\/\/.+\/.+\.(avif|png|jpg|jpeg|webp)(\?.*)?$/i)) {
             return res.status(400).json({ error: "Invalid image URL" });
           }
-        const newname = 'Photo' + Date.now() + '.jpg';
-        const destDir = path.join('/tmp','images');
-        const options = {
-            url: link, 
-            dest: path.join(destDir, newname)
-            
-        };
-        await download.image(options)
-        res.json(newname)
+          // store the image stthe cloud 
+          const uplodImage=await cloudstore.uploader.upload(link,{
+            folder:"bolg-images",
+          })
+     
+         res.json({public_id:uplodImage.public_id,url:uplodImage.secure_url})
     }catch(err) {
         res.status(400).json({error:"From the Sever ",err})
        
@@ -146,16 +139,7 @@ route.post("/upload-by-links",async (req,res)=>{
 })
 
 // for upload photo
-const storage=multer.diskStorage({
-    destination:function (req,file,cb){
-        cb(null, path.join('/tmp', 'upload')) 
-    },
-    filename:function(req,file,cb){
-        return cb(null, `${Date.now()}-${file.originalname}`)
-        
-    }
-})
-
+const storage=multer.memoryStorage()
 const upload = multer({ storage: storage ,
     limits:{fileSize:10*1024*1024}, //10MB file size
     fileFilter:(req,file,cb)=>{
@@ -177,10 +161,11 @@ const upload = multer({ storage: storage ,
 route.post("/upload",upload.array("photos",100),async(req,res)=>{
     try{
  const uploadedFiles=[]
- console.log('Uploaded Files:', req.files);
- for(let i=0; i<req.files.length;i++){
-    const{filename}=req.files[i]
-    uploadedFiles.push(filename);
+ for(file of req.files){
+    const uplodImages=await cloudstore.uploader.upload(file.path,{
+      folder:"bolg-images",  
+    })
+    uploadedFiles.push({public_id:uplodImages.public_id,url:secure_url});
     }
     res.status(200).json(uploadedFiles);
     }catch(error){

@@ -50,16 +50,8 @@ app.use('/upload', express.static(path.join(__dirname, 'upload'), {
   }
 })
 );
-// Temporary Directories
-const tmpImagesDir = path.join(tmpDir, 'images');
-const tmpUploadDir = path.join(tmpDir, 'upload');
 
-if (!fs.existsSync(tmpImagesDir)) {
-  fs.mkdirSync(tmpImagesDir);
-}
-if (!fs.existsSync(tmpUploadDir)) {
-  fs.mkdirSync(tmpUploadDir);
-}
+
 //Deafult Route of Sever
 app.get("/", (req, res) => {
     res.send("Server is running!");
