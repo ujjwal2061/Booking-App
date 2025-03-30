@@ -28,8 +28,9 @@ export default function Photoupload({setPhotos}){
         api.post('/upload',data,{
         }).then((response)=>{
             const uploadphotos=response.data
-            setaddPhoto((prev) => [...prev, ...uploadphotos]); // -> slove the error at that photos store at inside array od the array 
-            setPhotos((prev) => [...prev, ...uploadphotos]);
+            const photoUrl=uploadphotos.map(photo=>photo.url)
+            setaddPhoto((prev) => [...prev, ...photoUrl]); // -> slove the error at that photos store at inside array od the array 
+            setPhotos((prev) => [...prev, ...photoUrl]);
         }).catch((error)=>{
             console.log("Error at Upload",error);
     
