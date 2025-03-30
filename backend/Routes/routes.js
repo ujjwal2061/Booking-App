@@ -160,8 +160,11 @@ route.post("/upload",upload.array("photos",100),async(req,res)=>{
     try{
  const uploadedFiles=[]
  for(file of req.files){
-    const uplodImages=await cloudstore.uploader.upload(file.path,{
-      folder:"bolg-images",  
+    const b64 = Buffer.from(file.buffer).toString("base64");
+    const dataURI = "data:" + file.mimetype + ";base64," + b64;
+    const uplodImages=await cloudstore.uploader.upload(dataURI,{
+      folder:"bolg-images", 
+      resource_type: "auto" 
     })
     uploadedFiles.push({public_id:uplodImages.public_id,url:secure_url});
     }
