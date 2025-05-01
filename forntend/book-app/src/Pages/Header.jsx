@@ -51,28 +51,29 @@ useEffect(()=>{
   }
   }
   const handlepofile=()=>{
- 
     setIsShow((prevState)=>!prevState)
   }
   const Toogle=()=>{
     setIsOpen((prevstate)=>!prevstate)
   }
   return (
-    <div className='px-5 py-1 border-b-2'>
+    <div className=' z-30 bg-maincolor bg-opacity-90 backdrop-blur-md shadow-md w-full px-5 py-2 '>
       <header className='  flex  justify-between  '>
       <Link to={"/"} className='flex  items-center gap-3' >
       <h2 className='text-2xl tracking-wide font-mono font-semibold '>Homy</h2>
      </Link>
-    <div className="relative hidden md:block">
-  <div className="flex items-center justify-center gap-2 bg-white rounded-lg py-1 px-3  hover:shadow-lg transition-all duration-200 border border-gray-200">
-    <img src={profileImage ||discordjpg} className="h-8 w-8 rounded-full object-cover" />
-    <button onClick={handlepofile} className="cursor-pointer p-1">
-      <FaCaretDown size={16} className="text-gray-600 hover:text-black transition-colors" />
-    </button>
+    <div className="relative   hidden md:block">
+       <div className="flex items-center  justify-center gap-6  rounded-lg px-3  transition-all duration-200 border">
+         <Link to="/login" className="  py-1 px-4 bg-white border border-gray-400 rounded-lg text-center font-medium text-gray-800 hover:bg-gray-50 transition-colors">
+            Sign In
+          </Link>
+          <Link to="/register" className="   py-1 px-4 bg-black rounded-lg text-center font-medium text-white hover:bg-gray-700 transition-colors">
+            Sign Up
+          </Link>
   </div>
   {IsShow && (
     <div ref={closemenuref} 
-      className="absolute right-0 top-12 w-64 bg-white rounded-xl overflow-hidden z-20  border border-gray-100 animate-fadeIn" >
+      className="absolute right-0 top-12 w-64  bg-pink-500  rounded-xl overflow-hidden z-20  border border-gray-100 animate-fadeIn" >
       {user ? (
 <div className="flex flex-col">
   <div className="bg-gray-50 p-4 border-b hover:border-gray-200">
@@ -127,12 +128,14 @@ useEffect(()=>{
     <button className='md:hidden  mr-2 '
       onClick={Toogle}>
         <TiThMenu  size={23}/>
-
     </button>
     </header>
     {IsOpen && (
-<div   ref={closemenuref} className={` fixed top-0 z-10 right-0 h-full w-60 px-2 shadow-md bg-white flex flex-col gap-5 md:hidden transition-transform duration-600 ease-in-out ${IsOpen ? "translate-x-0" : "translate-x-full"}`}>
-  <button onClick={()=>setIsOpen(false)}><TfiBackRight size={23} /></button>
+   <div   ref={closemenuref} 
+    className={`  bg-opacity-15 bg-maincolor fixed top-0 z-10 right-0 h-screen w-60 px-2 shadow-md  
+     transition-transform duration-500 ease-in-out   flex flex-col gap-5 md:hidden 
+   ${IsOpen ? "translate-x-0" : "translate-x-full"}`}>
+   <button onClick={()=>setIsOpen(false)}><TfiBackRight  className="hover:rotate-45 mt-5    rounded-md px-2  py-1  duration-300 " size={37} /></button>
   {user ? (
   <div className="flex flex-col">
     <div className=" p-4 rounded-md hover:bg-gray-300">
@@ -172,10 +175,11 @@ useEffect(()=>{
       </div>
   </div>
         ) : (
-    <>
-     <Link to="/login" className='font-mono rounded-md px-4 py-1 text-black'>Sign In</Link>
-     <Link to="/register" className='bg-black font-mono rounded-md px-4 py-1 text-white'> Sign Up</Link>
-    </>
+     <div className='flex flex-col  gap-5  p-2'>
+      <Link to="/login" className='font-mono rounded-md px-4 py-2 hover:bg-slate-200  transition-all ease-in-out  duration-500  text-black'>Sign In</Link>
+      <Link to="/register" className='bg-black font-mono rounded-md px-4 py-1 text-white hover:bg-slate-700 ransition-all ease-in-out  duration-500  '> Sign Up</Link>
+    </div>
+    
     )}
 </div>
     )}

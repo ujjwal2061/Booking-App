@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState ,useRef} from 'react'
 import { BiLoaderAlt } from 'react-icons/bi';
 import { Link,  useNavigate } from 'react-router'
 import { UserContext } from '../UserContext/usercontext';
+import { IoMdArrowRoundBack } from "react-icons/io";
 import api from '../api';
 export default function Login() {
     const [name,setName]=useState('')
@@ -39,9 +40,12 @@ export default function Login() {
   return ()=>clearTimeout(errorTimeRef.current)
  },[error])
   return (
-    <div className='relative min-h-screen flex items-center justify-center p-4'>
-    <div className='w-full max-w-md p-6   flex flex-col items-center'>
-      <h1 className='text-4xl text-center mb-4 font-semibold text-black font-mono'>Login</h1>
+    <div className='relative  h-screen flex items-center justify-center p-4'>
+    <div className='w-full max-w-md p-6   flex flex-col items-start'>
+      <Link to="/" className='text-sm font-mono mb-4 text-blue-700 hover:underline flex items-center gap-1'>
+      <IoMdArrowRoundBack size={18} /> Back
+      </Link>
+     <h1 className='text-3xl font-bold text-center mx-auto mb-6 font-mono w-full'>Login</h1>
       <form onSubmit={login} className='w-full'>
         <input type='text' placeholder='Username'   autoFocus  value={name} onChange={(e) => setName(e.target.value)} 
           className='w-full p-2 mb-4 rounded border border-gray-300 focus:outline-none ' />

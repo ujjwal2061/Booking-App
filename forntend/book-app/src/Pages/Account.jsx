@@ -37,7 +37,7 @@ export default function Account() {
           <div className='flex flex-col  gap-2 rounded-sm   px-3 py-1 '>
           <div
            onClick={()=>ImageRef.current.click()}
-          className="relative w-full max-w-4xl group  cursor-pointer px-2 py-2">
+           className="relative w-full max-w-4xl group  cursor-pointer px-2 py-2">
                <input type="file" className="hidden" ref={ImageRef} onChange={uploadeimage}  accept="image/*"/>
                 <img  src={profileImage ||  DiscordImg} className=' w-full h-64 object-cover rounded-lg group-hover:opacity-40 transition-opacity' />
                 <div className='absolute inset-0 flex items-center justify-center text-black  opacity-0 group-hover:opacity-50 '>

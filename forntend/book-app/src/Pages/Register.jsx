@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { useRef } from 'react'
-
+import { IoMdArrowRoundBack } from "react-icons/io";
 import { BiLoaderAlt } from 'react-icons/bi';
 import api from '../api';
 export default function Register() {
@@ -53,10 +53,13 @@ export default function Register() {
       
     },[error])
   return (
-<div className='  relative min-h-screen flex items-center justify-center p-4'>
-  <div className='  w-full max-w-md p-6  rounded-lg  flex flex-col items-center'>
-    <h1 className='text-4xl text-center mb-4 font-semibold text-gray-800'>Register</h1>
-    <form onSubmit={register} className='w-full'>
+<div className='  relative flex  h-screen    items-center justify-center p-4'>
+  <div className='w-full max-w-md p-6   flex flex-col items-start'>
+        <Link to="/" className='text-sm font-mono mb-4 text-blue-700 hover:underline flex items-center gap-1'>
+        <IoMdArrowRoundBack size={18} /> Back
+        </Link>
+        <h1 className='text-3xl font-bold text-center mx-auto mb-6 font-mono w-full'>Register</h1>
+      <form onSubmit={register} className='w-full'>
         <input  type='text'  placeholder='Username'  value={name}  onChange={(e) => setName(e.target.value)} 
             className='w-full p-2 mb-4 rounded border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400'/>
           <input  type='email'  placeholder='youremail@gmail.com'  value={email}  onChange={(e) => setEmail(e.target.value)} 

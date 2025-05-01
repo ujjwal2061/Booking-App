@@ -22,10 +22,10 @@ const [user, setUser] = useState(null);
     <UserContextProvider>
       <BookingcontextProvider>
     <Routes>
-      <Route path="/" element={<Layout />}> 
-       <Route index element={user ? <Navigate to="/allplaces" /> : <Home />} />
        <Route path="/login" element={<Login />} />
        <Route path="/register" element={<Register />} />
+      <Route path="/" element={<Layout />}> 
+       <Route index element={user ? <Navigate to="/allplaces" /> : <Home />} />
        <Route path="/allplaces" element={<Allplaces />} />
        <Route path="account" element={<Account />} />
        <Route path="/account/bookings" element={<Bookings />} />
