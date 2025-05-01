@@ -13,7 +13,17 @@ export default {
       },
    font:{
     samefont:"Inter"
-   }
+   },
+   keyframes: {
+    'fade-in-pulse': {
+      '0%': { opacity: '0', transform: 'scale(0.95)' },
+      '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+      '100%': { opacity: '1', transform: 'scale(1)' },
+    },
+  },
+   animation: {
+    'fade-in-pulse': 'fade-in-pulse 2s ease-in-out infinite',
+  },
     },
   },
   plugins: [],
