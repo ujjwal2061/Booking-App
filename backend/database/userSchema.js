@@ -6,8 +6,6 @@ const userData=new mongoose.Schema({
     email:{ type:String,  required:true, unique:true },
     password:{type:String,required:true},
    },{timestamps:true})
-
-
  userData.methods.comparePassword=async function(candidatepassword){
    try{
   const passwordmatch=await bcrypt.compare(candidatepassword,this.password)

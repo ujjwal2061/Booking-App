@@ -17,7 +17,6 @@ route.get("/allplaces",async(req,res)=>{
     const limit=parseInt(req.query.limit) || 5;
     try{
         const skip=(page-1)*limit
-        
         const totalPlaces=await Placemodel.countDocuments()
         const places=await Placemodel.find({})
            .skip(skip)
@@ -51,12 +50,13 @@ route.post('/register',async (req,res)=>{
         const token=generatetoken(payload)
         res.cookie("auth_token",token ,{
             httpOnly:true,
+            // secure:false,
             secure:process.env.NODE_ENV==="production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
-            sameSite: "None", 
-            domain:".vercel.app"
+          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
+            // domain:".vercel.app"
         })
-        res.status(201).json({msg:"User created succesfully",user:response,token:token})
+        res.status(201).json({msg:"User created succesfully",user:response})
     }catch(error){
         res.status(500).json({msg:"Error creating user",error:error.message})
     }
@@ -80,11 +80,20 @@ route.post('/login',async(req,res)=>{
   const token=generatetoken(payload)
   res.cookie("auth_token",token ,{
     httpOnly:true,
+    // secure:false,
     secure: process.env.NODE_ENV === "production",
     maxAge:10*24*60*60*1000,
-    sameSite:"None"
+    sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
 })
-   res.json({token ,user:user})
+   res.json({
+    status:"Success",
+    user:{
+        name:user.name,
+        email:user.email,
+        _id:user.id
+    }
+})
+console.log(token)
     }catch(error){
         res.status(500).json({msg:"Server error"})
     }
@@ -99,12 +108,21 @@ route.get("/profile",async(req,res,)=>{
         // check the user cookies 
         const decode=jwt.verify(token, process.env.JWT_SECRET)
         const user=await alluser.findById(decode.id)
+        console.log(user)
         if(!user){
             return res.status(404).json({msg:"User not Found"})
         }
-        res.json({name:user.name,email:user.email,_id:user.id})
+        // good one 
+        res.status(200).json({
+            status:"Success",
+            user:{
+                name:user.name,
+                email:user.email,
+                _id:user.id
+            }
+        })
     }catch(error){
-        res.status(403).json({error:"Invalid token. Please log in again."})
+        res.status(500).json({error:"Invalid token. Please log in again."})
     }
 
 });
@@ -131,7 +149,7 @@ route.post("/upload-by-links",async (req,res)=>{
      
          res.json({public_id:uplodImage.public_id,url:uplodImage.secure_url})
     }catch(err) {
-        res.status(400).json({error:"From the Sever ",err})
+        res.status(500).json({error:"From the Sever ",err})
        
         };
 })
@@ -252,10 +270,12 @@ route.get("/places",(req,res)=>{
 route.get("/places/:id",async(req,res)=>{
     const {id}=req.params
     try{
-        res.json(await Placemodel.findById(id))
+        res.status(200).json(await Placemodel.findById(id))
     }catch(error){
-        res.status(400).json({msg:"Got a the Single page loading",error})
-       
+        res.status(400).json({
+            status:"Fail",
+            msg:"Problem at Fetching",error
+        })
     }
 })
 // for serach query
@@ -299,16 +319,15 @@ route.get("/get-places",async (req,res)=>{
        //check the result 
        if(result.length===0){
         return res.status(400).json({
-            susccess:false,
+            status:"Fail",
             msg:"No places found matching your need"
         })
        }
-       
        res.status(200).json({success:true,result})
      }catch(error){
-    res.status(500).json({
-        success: false,
-        msg:"Cnat get it",error})
+     res.status(500).json({
+         status:"Server Error",
+         msg:"Can't get it",error})
      }
 })
 module.exports = route;
