@@ -1,188 +1,281 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router'
-import { FaHotel } from "react-icons/fa";
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router';
+import { FaHotel, FaCaretDown,  } from "react-icons/fa";
 import { CiViewList } from "react-icons/ci";
-import { UserContext } from '../UserContext/usercontext'
-import { TiThMenu } from "react-icons/ti";
-import { TfiBackRight } from "react-icons/tfi";
-import  discordjpg from "../assets/discord.jpeg"
 import { IoIosLogOut } from "react-icons/io";
-import { useNavigate} from 'react-router'
-import { FaCaretDown } from "react-icons/fa";
+import { RiMenuLine, RiCloseLine } from "react-icons/ri";
+import { UserContext } from '../UserContext/usercontext';
+import defaultAvatar from "../assets/discord.jpeg";
 import api from '../api';
+
 export default function Header() {
-  const {user,setUser,setReady}=useContext(UserContext)
-  const [IsOpen,setIsOpen]=useState(false)
-  const [IsShow,setIsShow]=useState(false)
-   const [profileImage,setprofileImage]=useState("")
-  const navigate = useNavigate()
-   
-  const closemenuref=useRef()
-useEffect(()=>{
-  const userImage=localStorage.getItem("userImage")
- if(userImage){
-  setprofileImage(userImage)
- }
-},[])
-   useEffect(()=>{
-    function closemenubara(event){
-      if(closemenuref.current && !closemenuref.current.contains(event.target)){
-       setIsOpen(false)
-       setIsShow(false) 
+  const { user, setUser, setReady } = useContext(UserContext);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
+  const [profileImage, setProfileImage] = useState("");
+  const navigate = useNavigate();
+  const menuRef = useRef();
+  const dropdownRef = useRef();
+
+  // Initialize profile image from localStorage
+  useEffect(() => {
+    const userImage = localStorage.getItem("userImage");
+    if (userImage) {
+      setProfileImage(userImage);
+    }
+  }, []);
+
+  // Close dropdowns when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      // Close profile dropdown if clicking outside
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setProfileDropdownOpen(false);
+      }
+      
+      // Close mobile menu when clicking outside (but only on mobile)
+      if (window.innerWidth < 768 && menuRef.current && !menuRef.current.contains(event.target)) {
+        setMobileMenuOpen(false);
       }
     }
-    document.addEventListener("mousedown",closemenubara)
-    return ()=>document.removeEventListener("mousedown",handlepofile)
-   })
-  async function logoutuser(){
-    try{
-      document.cookie="auth_token=;"
-      await api.post('/logout')
-      setUser(null); // Set the user state to null after logging out
-      setReady(true)
-       navigate("/")
-       localStorage.clear("userImage")
     
-  } catch (error) {
-    navigate("/")
-    throw error
-    
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Handle logout
+  async function handleLogout() {
+    try {
+      document.cookie = "auth_token=;";
+      await api.post('/logout');
+      setUser(null);
+      setReady(true);
+      localStorage.removeItem("userImage");
+      navigate("/");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      navigate("/");
+    }
   }
-  }
-  const handlepofile=()=>{
-    setIsShow((prevState)=>!prevState)
-  }
-  const Toogle=()=>{
-    setIsOpen((prevstate)=>!prevstate)
-  }
+
+  // Toggle profile dropdown
+  const toggleProfileDropdown = () => {
+    setProfileDropdownOpen(prev => !prev);
+  };
+
+  // Toggle mobile menu
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(prev => !prev);
+  };
+
   return (
-    <div className=' z-30 bg-maincolor bg-opacity-90 backdrop-blur-md shadow-md w-full px-5 py-2 '>
-      <header className='  flex  justify-between  '>
-      <Link to={"/"} className='flex  items-center gap-3' >
-      <h2 className='text-2xl tracking-wide font-mono font-semibold '>Homy</h2>
-     </Link>
-    <div className="relative   hidden md:block">
-       <div className="flex items-center  justify-center gap-6  rounded-lg px-3  transition-all duration-200 border">
-         <Link to="/login" className="  py-1 px-4 bg-white border border-gray-400 rounded-lg text-center font-medium text-gray-800 hover:bg-gray-50 transition-colors">
-            Sign In
+    <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-100">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center">
+            <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-500 bg-clip-text text-transparent">
+              Homy
+            </span>
           </Link>
-          <Link to="/register" className="   py-1 px-4 bg-black rounded-lg text-center font-medium text-white hover:bg-gray-700 transition-colors">
-            Sign Up
-          </Link>
-  </div>
-  {IsShow && (
-    <div ref={closemenuref} 
-      className="absolute right-0 top-12 w-64  bg-pink-500  rounded-xl overflow-hidden z-20  border border-gray-100 animate-fadeIn" >
-      {user ? (
-<div className="flex flex-col">
-  <div className="bg-gray-50 p-4 border-b hover:border-gray-200">
-      <Link to="/account" className="w-full">
-        <div className="flex items-center gap-3">
-          <img src={ profileImage ||discordjpg} className="h-10 w-10 rounded-full object-cover border border-gray-200" />
-             <div className="flex flex-col">
-                <span className="font-medium text-gray-900">Profile</span>
-                <span className="text-sm text-gray-500">Manage your account</span>
-            </div>
-        </div>
-       </Link>
-     </div>
-  <div className="p-2">
-    <Link to="/account/bookings" className="w-full">
-       <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 transition-colors">
-          <div className="bg-blue-50 p-2 rounded-lg">
-           <FaHotel className="text-blue-600" size={18} />
-            </div>
-              <span className="font-medium text-gray-800">Your Bookings</span>
-            </div>
-      </Link>
-      <Link to="/account/places" className="w-full">
-        <div className="flex items-center gap-3 p-2 rounded-lg hover:bg-gray-200 transition-colors">
-          <div className="bg-green-50 p-2 rounded-lg">
-            <CiViewList className="text-green-600" size={18} />
-            </div>
-        <span className="font-medium text-gray-800">Accommodations</span>
-      </div>
-    </Link>
-  </div>
- <div className="border-t border-gray-100 p-2 mt-2">
-    <button onClick={logoutuser}  className="w-full  bg-red-600 flex items-center justify-center gap-2 p-2 text-white hover:bg-red-500 rounded-lg transition-colors" >
-     <IoIosLogOut size={18} />
-        <span className="font-medium">Logout</span>
-      </button>
-  </div>
-</div>
-      ) : (
-        <div className="p-4 flex flex-col gap-3">
-          <Link to="/login" className="w-full py-2 px-4 bg-white border border-gray-200 rounded-lg text-center font-medium text-gray-800 hover:bg-gray-50 transition-colors">
-            Sign In
-          </Link>
-          <Link to="/register" className="w-full py-2 px-4 bg-blue-600 rounded-lg text-center font-medium text-white hover:bg-blue-700 transition-colors">
-            Sign Up
-          </Link>
-        </div>
-      )}
-    </div>
-  )}
-</div>
-    <button className='md:hidden  mr-2 '
-      onClick={Toogle}>
-        <TiThMenu  size={23}/>
-    </button>
-    </header>
-    {IsOpen && (
-   <div   ref={closemenuref} 
-    className={`  bg-opacity-15 bg-maincolor fixed top-0 z-10 right-0 h-screen w-60 px-2 shadow-md  
-     transition-transform duration-500 ease-in-out   flex flex-col gap-5 md:hidden 
-   ${IsOpen ? "translate-x-0" : "translate-x-full"}`}>
-   <button onClick={()=>setIsOpen(false)}><TfiBackRight  className="hover:rotate-45 mt-5    rounded-md px-2  py-1  duration-300 " size={37} /></button>
-  {user ? (
-  <div className="flex flex-col">
-    <div className=" p-4 rounded-md hover:bg-gray-300">
-      <Link to="/account" className="w-full">
-            <div className="flex items-center hover:border-gray-400 gap-3">
-                <img src={discordjpg} className="h-10 w-10 rounded-full object-cover border border-gray-200" />
-                <div className="flex flex-col">
-                <span className="font-medium text-gray-900">Profile</span>
-                <span className="text-sm text-gray-500">Manage your account</span>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex md:items-center md:space-x-6">
+            {!user ? (
+              <div className="flex items-center space-x-4">
+                <Link 
+                  to="/login" 
+                  className="py-2 px-4 text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  to="/register" 
+                  className="py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+                >
+                  Sign Up
+                </Link>
               </div>
+            ) : (
+              <div className="relative" ref={dropdownRef}>
+                <button 
+                  className="flex items-center space-x-3 py-2 px-3 rounded-full hover:bg-gray-100 transition-colors focus:outline-none"
+                  onClick={toggleProfileDropdown}
+                >
+                  <img 
+                    src={profileImage || defaultAvatar} 
+                    alt={user.name} 
+                    className="h-8 w-8 rounded-full object-cover border border-gray-200" 
+                  />
+                  <span className="font-medium text-gray-700">{user.name}</span>
+                  <FaCaretDown 
+                    className={`text-gray-500 transition-transform duration-200 ${profileDropdownOpen ? 'rotate-180' : ''}`} 
+                  />
+                </button>
+
+                {/* Profile Dropdown */}
+                {profileDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-72 bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden animate-fadeIn">
+                    <div className="p-4 border-b border-gray-100">
+                      <Link to="/account" className="flex items-center space-x-3 hover:bg-gray-50 p-2 rounded-lg">
+                        <img 
+                          src={profileImage || defaultAvatar} 
+                          alt={user.name}
+                          className="h-10 w-10 rounded-full object-cover border border-gray-200" 
+                        />
+                        <div>
+                          <p className="font-medium text-gray-800">{user.name}</p>
+                          <p className="text-sm text-gray-500">Manage your account</p>
+                        </div>
+                      </Link>
+                    </div>
+                    
+                    <div className="p-2">
+                      <Link to="/account/bookings" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div className="bg-blue-50 p-2 rounded-lg">
+                          <FaHotel className="text-blue-600" size={16} />
+                        </div>
+                        <span className="font-medium text-gray-700">Your Bookings</span>
+                      </Link>
+                      
+                      <Link to="/account/places" className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                        <div className="bg-green-50 p-2 rounded-lg">
+                          <CiViewList className="text-green-600" size={16} />
+                        </div>
+                        <span className="font-medium text-gray-700">Accommodations</span>
+                      </Link>
+                    </div>
+                    
+                    <div className="border-t border-gray-100 p-2">
+                      <button 
+                        onClick={handleLogout}
+                        className="w-full flex items-center justify-center space-x-2 p-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <IoIosLogOut size={18} />
+                        <span className="font-medium">Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
-        </Link>
-    </div>
-    <div className="p-2 flex-col flex  gap-2">
-      <Link to="/account/bookings" className="w-full">
-        <div className="flex items-center bg-gray-100 gap-3 p-2  rounded-lg hover:bg-gray-300 transition-colors">
-            <div className="bg-blue-50 p-2 rounded-lg">
-             <FaHotel className="text-blue-600" size={18} />
-            </div>
-           <span className="font-medium text-gray-800">Your Bookings</span>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <button 
+              onClick={toggleMobileMenu}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:text-gray-900 hover:bg-gray-100 focus:outline-none"
+            >
+              {mobileMenuOpen ? (
+                <RiCloseLine className="block h-6 w-6" aria-hidden="true" />
+              ) : (
+                <RiMenuLine className="block h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
           </div>
-        </Link>
-      <Link to="/account/places" className="w-full">
-      <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-100  hover:bg-gray-300 transition-colors">
-         <div className="bg-green-50 p-2 rounded-lg">
-         <CiViewList className="text-green-600" size={18} />
         </div>
-        <span className="font-medium text-gray-800">Accommodations</span>
       </div>
-     </Link>
-    </div>
-      <div className=" absolute bottom-2 w-full right-0   p-2 mt-2">
-          <button  onClick={logoutuser}  className="w-full bg-red-600  flex items-center justify-center gap-2 p-2 text-white hover:bg-red-500 rounded-lg transition-colors" >
-          <IoIosLogOut size={18} />
-          <span className="font-medium">Logout</span>
-       </button>
+
+      {/* Mobile menu, show/hide based on menu state */}
+      <div
+        ref={menuRef}
+        className={`fixed   inset-y-0 right-0 transform ${
+          mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
+        } md:hidden transition duration-300 ease-in-out `}
+      >
+        <div className="h-full w-72  shadow-xl flex flex-col">
+          <div className="flex items-center justify-between p-4 border-b  border-gray-100">
+            <h2 className="text-xl font-semibold text-gray-800">Menu</h2>
+            <button
+              onClick={toggleMobileMenu}
+              className="p-2 rounded-md text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+            >
+              <RiCloseLine className="h-6 w-6" />
+            </button>
+          </div>
+
+          <div className="flex-1 bg-maincolor bg-opacity-20  p-4">
+            {user ? (
+              <>
+                <div className="mb-2">
+                  <Link 
+                    to="/account" 
+                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <img 
+                      src={profileImage || defaultAvatar} 
+                      alt={user.name}
+                      className="h-10 w-10 rounded-full object-cover border border-gray-200" 
+                    />
+                    <div>
+                      <p className="font-medium text-gray-800">{user.name}</p>
+                      <p className="text-sm text-gray-500">Manage your account</p>
+                    </div>
+                  </Link>
+                </div>
+
+                <div className="space-y-2">
+                  <Link 
+                    to="/account/bookings" 
+                    className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <div className="bg-blue-50 p-2 rounded-lg">
+                      <FaHotel className="text-blue-600" size={18} />
+                    </div>
+                    <span className="font-medium text-gray-700">Your Bookings</span>
+                  </Link>
+                  
+                  <Link 
+                    to="/account/places" 
+                    className="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <div className="bg-green-50 p-2 rounded-lg">
+                      <CiViewList className="text-green-600" size={18} />
+                    </div>
+                    <span className="font-medium text-gray-700">Accommodations</span>
+                  </Link>
+                </div>
+              </>
+            ) : (
+              <div className="space-y-4 py-6">
+                <Link 
+                  to="/login"
+                  className="block w-full py-3 px-4 text-center bg-gray-50 hover:bg-gray-100 text-gray-800 font-medium rounded-lg"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign In
+                </Link>
+                <Link 
+                  to="/register"
+                  className="block w-full py-3 px-4 text-center bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {user && (
+            <div className="p-4 border-t border-gray-100">
+              <button 
+                onClick={() => {
+                  handleLogout();
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full flex items-center justify-center space-x-2 p-3 text-red-600 hover:bg-red-50 rounded-lg"
+              >
+                <IoIosLogOut size={18} />
+                <span className="font-medium">Logout</span>
+              </button>
+            </div>
+          )}
+        </div>
       </div>
-  </div>
-        ) : (
-     <div className='flex flex-col  gap-5  p-2'>
-      <Link to="/login" className='font-mono rounded-md px-4 py-2 hover:bg-slate-200  transition-all ease-in-out  duration-500  text-black'>Sign In</Link>
-      <Link to="/register" className='bg-black font-mono rounded-md px-4 py-1 text-white hover:bg-slate-700 ransition-all ease-in-out  duration-500  '> Sign Up</Link>
     </div>
-    
-    )}
-</div>
-    )}
-</div>
-  )
+  );
 }
