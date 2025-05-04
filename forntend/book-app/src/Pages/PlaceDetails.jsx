@@ -13,7 +13,6 @@ export default function PlaceDetails() {
     if (!id) return;
     api.get("/places/" + id).then((response) => {
       setData(response.data);
-      console.log(response.data)
       setLoading(false);
     });
   }, [id]);
