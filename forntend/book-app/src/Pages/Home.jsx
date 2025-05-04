@@ -21,7 +21,7 @@ export default function Home() {
     return <Navigate to="/allplaces" replace />;
   }
   return (
-    <section className=' w-full '>
+    <section className="bg-white min-h-screen flex items-center">
     <div className='flex  flex-col md:flex-row justify-center items-center mt-2 px-4 md:px-10 py-10'>
       <div className='md:w-1/2 w-full px-4 md:px-10 py-8 text-center md:text-left'>
         <h1 className='text-4xl md:text-5xl font-serif'>Explore your <br />place to stay</h1>

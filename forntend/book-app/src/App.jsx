@@ -34,7 +34,7 @@ useEffect(()=>{
   })
  
 },[])
-console.log(user )
+
   return (
    
       <BookingcontextProvider>

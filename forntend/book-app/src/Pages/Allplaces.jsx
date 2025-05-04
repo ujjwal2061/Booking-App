@@ -2,18 +2,20 @@
  import {debounce} from "lodash"
  import { CiSearch } from "react-icons/ci";
  import { Link } from 'react-router';
-  import api from "../api"
-  import { BiLoaderAlt } from 'react-icons/bi';
-import { Bookingcontext } from '../UserContext/Bookingcontext';
+ import { HiViewfinderCircle } from "react-icons/hi2";
+import api from "../api"
+import { BiLoaderAlt } from 'react-icons/bi';
+ import { Bookingcontext } from '../UserContext/Bookingcontext';
+import { IoCloseSharp } from "react-icons/io5";
  export default function Allplaces(){
-      const [allplaces,setAllplaces]=useState([])
-      const [search,setSearch]=useState("")
-      const {setBooking}=useContext(Bookingcontext)
-      const [error,setError]=useState(false)
-      const [currentpage,setCurrnetpage]=useState(1)
-      const [totalpage,setTotalpage]=useState(1)
-      const [loading,setLoading]=useState(false)
-      
+      const [allplaces,setAllplaces]=useState([]);
+      const [search,setSearch]=useState("");
+      const {setBooking}=useContext(Bookingcontext);
+      const [error,setError]=useState(false);
+      const [currentpage,setCurrnetpage]=useState(1);
+      const [totalpage,setTotalpage]=useState(1);
+      const [loading,setLoading]=useState(false);
+      const [activeimages,setActiveImages]=useState(null);
       useEffect(()=>{
         setLoading(true)
         api.get("/allplaces",{
@@ -44,6 +46,19 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
               setCurrnetpage((prevpage)=>prevpage-1)
             }
           }
+          //->image open
+          const toggleactive=(id)=>{
+               if(activeimages===id){
+               
+                setActiveImages(null)
+               }else{
+               
+                setActiveImages(id)
+               }
+          }
+          const  closeActiveimage=()=>{
+            setActiveImages(null)
+          }
           // Have to read and Write again this code 
           const searchplaces = useCallback(
             debounce(async (searchTerm) => {
@@ -53,12 +68,11 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
                   withCredentials: true,
             });
             setAllplaces(response.data.result); 
-            console.log("Logo ",response.data.result)
           } catch (error) {
-            console.log("Can't Fetch the Data", error);
+            setError(error.data.msg)
           }
         }, 500),
-        [] 
+        [search] 
       );
       
       useEffect(() => {
@@ -81,9 +95,9 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
           return allBooking
         })
       }
- 
+
       return(
-    <section className='px-3 py-7'>
+    <section className={` min-h-screen px-3 py-7`}>
       <div className='flex py-2   justify-center  items-center w-full'>
          <div className='relative   mx-auto md:mx-0'>
           {!search && (
@@ -100,28 +114,26 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
     <div className="grid  grid-cols-1   sm:grid-cols-2  lg:flex lg:px-40 lg-py-12 lg:flex-col gap-6  p-4">
      {loading ? (
        <p className='text-gray-800 text-center flex flex-row  items-center '>Geeting Your place <BiLoaderAlt className="animate-spin mt-1 " /> </p>
-      ):(allplaces.map((place) => (
-        <Link to={`/allplaces/places/${place._id}`}
-        key={place._id}
-        className=" cursior-ponter  lg:px-15  rounded-md   lg:w-full transform transition duration-300  " >
+      ):( allplaces.map((place) => (
+      <div
+       className="  cursor-pointer  lg:px-15  rounded-md   lg:w-full transform transition duration-300  " >
            <div className="w-full  h-60  overflow-hidden rounded-t-md">
-           {place.photos?.length > 0 ? (
-           
+           <div className=' relative h-full '>
              <img
              src={place.photos?.[0]?.url}
-              alt={place.title}
-              className="w-full  h-full object-cover rounded-t-md"
-              onError={(e) => {
-                e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
+             alt={place.title}
+             className="w-full  h-full object-cover rounded-t-md"
+             onError={(e) => {
+               e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
               }}
               />
-            ) : (
-              <div className="w-full h-48 flex items-center justify-center ">
-              <p className="text-gray-500">No Image</p>
+              <button
+              onClick={()=>toggleactive(place._id)} 
+              className='absolute  text-white right-2  bottom-2 '>
+                <HiViewfinderCircle size={25}  className='hover:scale-110 duration-300  hover:text-black '/></button>
               </div>
-            )}
             </div>
-            <div className="p-4 flex flex-col  flex-grow  bg-white gap-2">
+            <Link to={`/allplaces/places/${place._id}`} className="p-4 flex flex-col  flex-grow  bg-white gap-2">
             <h2 className="text-lg font-semibold text-gray-900">{place.title}</h2>
             <p className="text-gray-600 text-sm">{place.address}</p>
             <p className="text-gray-700 mt-2  min-h-[50px] text-sm">
@@ -132,8 +144,9 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
             <strong>Check-in Time:</strong> {place.checkIn}:00
             </p>
             <button onClick={(event)=>handleBookhng(event,place)} className='px-5 bg-black  w-32 md:w-32 py-1 hover:bg-gray-600 text-center rounded-md  text-white'>Book Now</button>
-            </div>
             </Link>
+            </div>
+           
           ))
         )}
   </div>
@@ -147,6 +160,25 @@ import { Bookingcontext } from '../UserContext/Bookingcontext';
     disabled={currentpage===totalpage}
     className='bg-gray-300 text-black px-4  py-2  font-mono rounded-md text-center' >Next</button>
   </div>
+     
+  {activeimages && (
+        <div  className="fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4"   onClick={closeActiveimage} >
+          <div className="relative w-full h-full max-w-4xl max-h-[90vh] rounded-lg overflow-hidden" 
+            onClick={(e) => e.stopPropagation()} >
+            {allplaces.find(place => place._id === activeimages) && (
+              <img src={allplaces.find(place => place._id === activeimages)?.photos?.[0]?.url}
+                className="w-full h-full object-contain"
+                onError={(e) => {
+                  e.target.src = 'https://booking-app-afjh.vercel.app/default-image.jpg';
+                }} />
+            )}
+            <button onClick={closeActiveimage}
+              className="absolute top-4 right-4 bg-black bg-opacity-50 hover:bg-opacity-70 p-2 rounded-full text-white transition-all duration-300"  >
+              <IoCloseSharp size={24} />
+            </button>
+          </div>
+        </div>
+      )}
     </section> 
     )
  }

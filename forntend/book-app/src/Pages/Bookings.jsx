@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 
 import { Bookingcontext } from "../UserContext/Bookingcontext"
 import {Link} from "react-router"
@@ -13,7 +13,7 @@ export  default function(){
               <div className="w-full h-52  md:h-60 lg:h-[400px] overflow-hidden rounded-t-md">
                       {place.photos?.length > 0 ? (
                           <img
-                              src={place.photos[0].startsWith('http')
+                              src={place.photos[0].startsWith('https')
                                   ? place.photos[0]
                                   : `https://booking-app-afjh.vercel.app/uploads/${place.photos[0]}`}
                               alt={place.title}
