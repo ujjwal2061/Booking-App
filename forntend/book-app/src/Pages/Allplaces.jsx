@@ -8,14 +8,16 @@ import { BiLoaderAlt } from 'react-icons/bi';
  import { Bookingcontext } from '../UserContext/Bookingcontext';
 import { IoCloseSharp } from "react-icons/io5";
  export default function Allplaces(){
+  
       const [allplaces,setAllplaces]=useState([]);
       const [search,setSearch]=useState("");
-      const {setBooking}=useContext(Bookingcontext);
+      const {setBookinglist}=useContext(Bookingcontext);
       const [error,setError]=useState(false);
       const [currentpage,setCurrnetpage]=useState(1);
       const [totalpage,setTotalpage]=useState(1);
       const [loading,setLoading]=useState(false);
       const [activeimages,setActiveImages]=useState(null);
+      const [booking,setBooking]=useState(false)
       useEffect(()=>{
         setLoading(true)
         api.get("/allplaces",{
@@ -33,8 +35,6 @@ import { IoCloseSharp } from "react-icons/io5";
               setError(false)
             })
           },[currentpage])
-          
-          
           // handle the page change
           const chnagepage=()=>{
             if(currentpage < totalpage){
@@ -74,7 +74,6 @@ import { IoCloseSharp } from "react-icons/io5";
         }, 500),
         [search] 
       );
-      
       useEffect(() => {
         if (search.trim() === "") {
           setAllplaces([]); 
@@ -82,20 +81,27 @@ import { IoCloseSharp } from "react-icons/io5";
         }
         searchplaces(search);
       }, [search, searchplaces]);
-      
-      /// function to add in booking Section 
-      const handleBookhng=(event,newpalces)=>{
-        event.stopPropagation();
-        event.preventDefault();  
-        setBooking((prevPlace)=>{
-          if(prevPlace.some((places)=>places._id===newpalces._id)){
-            return prevPlace
-          }
-          const allBooking=[...prevPlace ,newpalces]
-          return allBooking
-        })
+  // booking route
+  const bookpalces=async(placeID)=>{
+    try{
+      setBooking(true)
+      const palces=({placeId:placeID})
+      const response =await api.post("/saves",palces,{
+        withCredentials: true
+      })
+      if (response==200) {
+        setSaved(true);
+        setBookinglist(response.data)
+        console.log("✔️ Saved:", response.data);
+      } else {
+        console.error("❌ Save failed with status:", response.status);
       }
-
+    } catch (error) {
+      console.error("Save failed:", error.response?.data || error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
       return(
     <section className={` min-h-screen px-3 py-7`}>
       <div className='flex py-2   justify-center  items-center w-full'>
@@ -133,7 +139,8 @@ import { IoCloseSharp } from "react-icons/io5";
                 <HiViewfinderCircle size={25}  className='hover:scale-110 duration-300  hover:text-black '/></button>
               </div>
             </div>
-            <Link to={`/allplaces/places/${place._id}`} className="p-4 flex flex-col  flex-grow  bg-white gap-2">
+            <div className="p-4 flex flex-col  flex-grow  bg-white gap-2">
+            <Link to={`/allplaces/places/${place._id}`} >
             <h2 className="text-lg font-semibold text-gray-900">{place.title}</h2>
             <p className="text-gray-600 text-sm">{place.address}</p>
             <p className="text-gray-700 mt-2  min-h-[50px] text-sm">
@@ -143,9 +150,17 @@ import { IoCloseSharp } from "react-icons/io5";
             <p className="text-gray-700 mt-2 font-serif text-sm">
             <strong>Check-in Time:</strong> {place.checkIn}:00
             </p>
-            <button onClick={(event)=>handleBookhng(event,place)} className='px-5 bg-black  w-32 md:w-32 py-1 hover:bg-gray-600 text-center rounded-md  text-white'>Book Now</button>
-            </Link>
+              </Link>
+            <div>
+            <button 
+            onClick={()=>bookpalces(place._id)}
+            // onClick={(event)=>handleBookhng(event,place)} 
+            className='px-5 bg-black  w-32 md:w-32 py-1 hover:bg-gray-600 text-center rounded-md  text-white'>
+              {booking===place._id ? "Booking..." :"Book Now"}
+              </button>
+              </div>
             </div>
+          </div>
            
           ))
         )}

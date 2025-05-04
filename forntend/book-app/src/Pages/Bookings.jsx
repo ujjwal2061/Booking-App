@@ -3,11 +3,13 @@ import { useContext } from "react"
 import { Bookingcontext } from "../UserContext/Bookingcontext"
 import {Link} from "react-router"
 
+
 export  default function(){
- const {booking ,removeBookingList}=useContext(Bookingcontext)
+ const {bookinglist ,}=useContext(Bookingcontext)
+ console.log(bookinglist)
     return(
         <div className="grid grid-cols-1 sm:grid-cols-2  lg:flex lg:px-40 lg:flex-col gap-6  p-4">
-      {booking.length > 0 ? ( booking.map((place) => (
+       {bookinglist.length > 0 ? ( bookinglist.map((place) => (
           <Link to={`/allplaces/places/${place._id}`} key={place._id}
              className="cursior-ponter  lg:px-10  rounded-md w-full transform transition duration-300 ">
               <div className="w-full h-52  md:h-60 lg:h-[400px] overflow-hidden rounded-t-md">
@@ -51,6 +53,6 @@ export  default function(){
    </Link>
 ))):(
     <p>Yet No Booking</p>
-)}
+)} 
 </div>
 )} 

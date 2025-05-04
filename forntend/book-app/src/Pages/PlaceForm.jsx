@@ -1,7 +1,6 @@
 import Preks from "./Perks";
 import Photoupload from "./Photoupload";
 import {  useEffect, useRef, useState } from "react";
-import axios from "axios";
 import api from "../api";
 import { useNavigate } from "react-router";
 import { BiLoaderAlt } from 'react-icons/bi';
@@ -39,8 +38,20 @@ import { BiLoaderAlt } from 'react-icons/bi';
             perks:perks,description,
             photos:photos,
             maxguests: maxguests,extraInfo,
-            checkIn,checkOut:checkout}
-            if (!title || !address || !perks || !description || !photos || !maxguests || !extraInfo || !checkIn || !checkout) {
+            checkIn,checkOut:checkout
+          }
+            const requiredfiled=(
+              !title || 
+              !address || 
+              !perks || 
+              !description || 
+              !photos || 
+              !maxguests || 
+              !extraInfo || 
+              !checkIn || 
+              !checkout
+            )
+            if (requiredfiled) {
               setError("Please fill in all required fields");
               return; 
           }

@@ -1,25 +1,23 @@
 import { createContext, useState ,useEffect} from "react";
-
 export const Bookingcontext=createContext()
-
+import api from "../api";
 export function BookingcontextProvider({children}){
-    const [booking,setBooking]=useState(()=>{
-        const stroedBooking=localStorage.getItem("booking");
-  return stroedBooking ? JSON.parse(stroedBooking):[] 
-   })
+    const [error ,setbookingError]=useState("")
+    const [bookinglist,setBookinglist]=useState([])
    useEffect(() => {
-    localStorage.setItem("booking", JSON.stringify(booking));
-}, [booking]);
-
-const removeBookingList=(placeID)=>{
-    setBooking((prevPlace)=>prevPlace.filter((places)=>places._id !==placeID))
-   }
-const clearBookinglist=()=>{
-    localStorage.removeItem("booking")
-    setBooking([])
-}
+     api.get("/bookmarks",{
+    withCredentials: true,
+   })
+   .then(response=>{
+   setBookinglist(response.data)   
+   }).catch(error=>{
+     setbookingError(error)
+   }).finally(()=>{
+     setbookingError(false)
+   })
+}, []);
     return(
-    <Bookingcontext.Provider value={{booking ,setBooking ,clearBookinglist,removeBookingList}} >
+    <Bookingcontext.Provider value={{bookinglist ,setBookinglist ,setbookingError,error}} >
             {children}
     </Bookingcontext.Provider>
 

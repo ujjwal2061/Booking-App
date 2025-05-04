@@ -37,8 +37,8 @@ useEffect(()=>{
 
   return (
    
-      <BookingcontextProvider>
     <Routes>
+
        <Route path="/login" element={<Login />} />
        <Route path="/register" element={<Register />} />
       <Route path="/" element={<Layout />}> 
@@ -50,8 +50,8 @@ useEffect(()=>{
        <Route path="/account/places/new" element={<PlaceFrom />} />
        <Route path="/allplaces/places/:id" element={<PlaceDetails />} />
       </Route>
+  
     </Routes>
-   </BookingcontextProvider>
    
   )
 }
