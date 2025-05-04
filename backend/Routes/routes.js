@@ -6,6 +6,7 @@ const jwt=require("jsonwebtoken")
 const multer = require('multer');
 const Placemodel = require("../database/placeSchema");
 const cloudstore=require("../cloud/cloudainary");
+const Bookmark = require("../database/booking.controller");
 
 
 const route=express.Router()
@@ -53,8 +54,8 @@ route.post('/register',async (req,res)=>{
             // secure:false,
             secure:process.env.NODE_ENV==="production",
             maxAge: 10 * 24 * 60 * 60 * 1000,
-          sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax"
-            // domain:".vercel.app"
+           sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+            domain:".vercel.app"
         })
         res.status(201).json({msg:"User created succesfully",user:response})
     }catch(error){
@@ -108,7 +109,7 @@ route.get("/profile",async(req,res,)=>{
         // check the user cookies 
         const decode=jwt.verify(token, process.env.JWT_SECRET)
         const user=await alluser.findById(decode.id)
-        console.log(user)
+        
         if(!user){
             return res.status(404).json({msg:"User not Found"})
         }
@@ -294,7 +295,6 @@ route.get("/get-places",async (req,res)=>{
             {perks:{$in:[regex]}}
            ]
         }
-
         if(req.query.address){
             searchquery.address={
                 // Match the last aprt of the string 
@@ -330,4 +330,75 @@ route.get("/get-places",async (req,res)=>{
          msg:"Can't get it",error})
      }
 })
+// for booking saving
+route.post("/saves",async(req,res)=>{
+try{
+    const token = req.cookies.auth_token;
+    if(!token) {
+        return res.status(401).json({error: "No authentication token provided"})
+    }
+    const {placeId}=req.body;
+    if(!placeId){
+        return res.status(400).json({error:"Place ID is requried"})
+    }
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+   const userId = decoded.id;
+    // check is there is any bookmarks or not 
+    let bookmarks =await Bookmark.findOne({user:userId})
+
+    if(!bookmarks){
+        bookmarks=new Bookmark({
+            user:userId,
+            places:[placeId]
+        })
+    }else{
+        // check is same palceID is if it then show old one  bookmaks 
+        if(!bookmarks.places.includes(placeId)){
+            bookmarks.places.push(placeId)
+        }
+    }
+    // saveing the bookmarks
+    await bookmarks.save();
+    res.status(200).json({
+        status: "Success",
+        msg: "Place saved successfully",
+        data: bookmarks
+      });
+      console.log("Booking list",bookmarks)
+}catch(e){
+    console.log(e)
+    res.status(500).json({
+        status:"Fail to Save",
+        msg:"Internal Server Error "
+    })
+}
+})
+// get savesbookmarks
+route.get("/bookmarks",async(req,res)=>{
+    try{
+        const token = req.cookies.auth_token;
+        if(!token) {
+            return res.status(401).json({error: "No authentication token provided"})
+        }
+        const savebookmarks=Bookmark.find({})
+        if((await savebookmarks).length >0){
+            res.status(200).json({
+                status:"Sucess",
+                mesg:"Book Your place to see your Bookmakrs"
+            })
+        }
+        res.status(200).json({
+            status:"Success",
+            saves:{
+                savepalces:savebookmarks
+            }
+        })
+    }catch(e){
+        res.status(500).json({
+            status:"Fail to Save",
+            msg:"Internal Server Error "
+        })
+    }
+})
+
 module.exports = route;
