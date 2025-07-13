@@ -10,6 +10,7 @@ import api from '../api';
 export default function Header() {
   const { user, setUser, setReady } = useContext(UserContext);
   const [profileDropdown, setProfileDropdown] = useState(false);
+  const [scroll ,setScroll]=useState(0)
   const [mobileOpen, setMobileOpen] = useState(false);
   const [profileImage, setProfileImage] = useState('');
   const navigate = useNavigate();
@@ -30,6 +31,15 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  //
+ window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  setScroll(scrollY)
+
+});
+    // const value= window.scrollY
+    // console.log("Scrool value",value)
+ 
   const handleLogout = async () => {
     try {
       document.cookie = 'auth_token=;';
@@ -39,14 +49,14 @@ export default function Header() {
       localStorage.removeItem('userImage');
       navigate('/');
     } catch (err) {
-      console.error(err);
+      setError(err);
       navigate('/');
     }
   };
 
   return (
-    <header className="bg-white shadow-md sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
+    <header className={`sticky   -top-0 z-50   ${scroll >= 22 ?" backdrop-blur-md bg-transparent  bg-slate-200 shadow-sm ":""}`}>
+      <div className="w-full   px-4  py-3 flex  justify-between items-center">
         <Link to="/" className="text-xl font-bold">Homy</Link>
 
         <div className="md:hidden">
@@ -55,11 +65,11 @@ export default function Header() {
           </button>
         </div>
             {/*this part is Desktop part */}
-        <nav className="hidden md:flex items-center space-x-4">
+        <nav className="hidden md:flex items-center space-x-4 px-2">
           {!user ? (
-            <div className='flex gap-4 '> 
-              <Link to="/login" className="text-gray-700  hover:text-black">Login</Link>
-              <Link to="/register" className="bg-black text-white px-3 py-1 rounded">Sign Up</Link>
+            <div className='flex  items-center  gap-5 '> 
+              <Link to="/login" className="text-gray-700  bg-slate-200  font-semibold px-5 py-1 rounded-lg hover:text-black">Login</Link>
+              <Link to="/register" className="bg-black text-white px-5 py-1 font-semibold rounded-lg ">Sign Up</Link>
             </div>
           ) : (
             <div className="relative" ref={dropdownRef}>
@@ -83,11 +93,11 @@ export default function Header() {
 
       {/* Mobile Nav */}
       {mobileOpen && (
-        <div className="md:hidden bg-gray-50 px-4 pb-4 space-y-2">
+        <div className=" absolute right-0 md:hidden w-64 bg-gray-50 rounded-md px-4 pb-4 space-y-2">
           {!user ? (
-            <div className='flex flex-col gap-1  '>
-              <Link to="/login" className="block w-1/2 px-2  hover:bg-slate-500 hover:rounded-md transition-colors duration-300 py-2" onClick={() => setMobileOpen(false)}>Login</Link>
-              <Link to="/register" className="block w-1/2 px-2  bg-black text-white rounded-md  hover:bg-gray-800 py-2" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+            <div className='flex flex-col  gap-2    font-semibold '>
+              <Link to="/login" className="block  px-2   bg-slate-200 hover:bg-slate-300 rounded-md hover:rounded-md transition-colors  text-center duration-300 py-2" onClick={() => setMobileOpen(false)}>Login</Link>
+              <Link to="/register" className="block  px-2  bg-black text-white rounded-md  hover:bg-gray-800 py-2 text-center" onClick={() => setMobileOpen(false)}>Sign Up</Link>
             </div>
           ) : (
             <>
