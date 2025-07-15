@@ -69,7 +69,7 @@ export default function Header() {
           {!user ? (
             <div className='flex  items-center  gap-5 '> 
               <Link to="/login" className="text-gray-700  bg-slate-200  font-semibold px-5 py-1 rounded-lg hover:text-black">Login</Link>
-              <Link to="/register" className="bg-black text-white px-5 py-1 font-semibold rounded-lg ">Sign Up</Link>
+              <Link to="/register" className="bg-[#175156] text-white px-5 py-1 font-semibold rounded-lg ">Sign Up</Link>
             </div>
           ) : (
             <div className="relative" ref={dropdownRef}>
@@ -97,7 +97,7 @@ export default function Header() {
           {!user ? (
             <div className='flex flex-col  gap-2    font-semibold '>
               <Link to="/login" className="block  px-2   bg-slate-200 hover:bg-slate-300 rounded-md hover:rounded-md transition-colors  text-center duration-300 py-2" onClick={() => setMobileOpen(false)}>Login</Link>
-              <Link to="/register" className="block  px-2  bg-black text-white rounded-md  hover:bg-gray-800 py-2 text-center" onClick={() => setMobileOpen(false)}>Sign Up</Link>
+              <Link to="/register" className="block  px-2  bg-[#175156] text-white rounded-md   py-2 text-center" onClick={() => setMobileOpen(false)}>Sign Up</Link>
             </div>
           ) : (
             <>

@@ -14,6 +14,9 @@ export default {
    font:{
     samefont:"Inter"
    },
+    boxShadow: {
+        'custom-green': '0 4px 6px -1px rgba(23, 81, 86, 0.15)', // use rgba for opacity
+      },
    keyframes: {
     'fade-in-pulse': {
       '0%': { opacity: '0', transform: 'scale(0.95)' },
@@ -26,6 +29,7 @@ export default {
   },
     },
   },
+ 
   plugins: [],
 }
 
