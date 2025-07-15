@@ -19,7 +19,7 @@ import { IoCloseSharp } from "react-icons/io5";
       const [activeimages,setActiveImages]=useState(null);
       const [booking,setBooking]=useState(false)
       useEffect(()=>{
-        setLoading(true)
+      
         api.get("/allplaces",{
           withCredentials: true,
           params:{page:currentpage,limit:5}
@@ -29,9 +29,7 @@ import { IoCloseSharp } from "react-icons/io5";
              setTotalpage(response.data.totalpage)
             }).catch(error=>{
               setError(error)
-              
             }).finally(()=>{
-              setLoading(false)
               setError(false)
             })
           },[currentpage])
@@ -92,12 +90,11 @@ import { IoCloseSharp } from "react-icons/io5";
       if (response==200) {
         setSaved(true);
         setBookinglist(response.data)
-        console.log("✔️ Saved:", response.data);
       } else {
         console.error("❌ Save failed with status:", response.status);
       }
     } catch (error) {
-      console.error("Save failed:", error.response?.data || error.message);
+      setError("Save failed:", error.response?.data || error.message);
     } finally {
       setLoading(false);
     }
@@ -118,9 +115,8 @@ import { IoCloseSharp } from "react-icons/io5";
         </div>
       </div>
     <div className="grid  grid-cols-1   sm:grid-cols-2  lg:flex lg:px-40 lg-py-12 lg:flex-col gap-6  p-4">
-     {loading ? (
-       <p className='text-gray-800 text-center flex flex-row  items-center '>Geeting Your place <BiLoaderAlt className="animate-spin mt-1 " /> </p>
-      ):( allplaces.map((place) => (
+
+       {allplaces.map((place) => (
       <div
        className="  cursor-pointer  lg:px-15  rounded-md   lg:w-full transform transition duration-300  " >
            <div className="w-full  h-60  overflow-hidden rounded-t-md">
@@ -160,10 +156,9 @@ import { IoCloseSharp } from "react-icons/io5";
               </button>
               </div>
             </div>
-          </div>
-           
+          </div>   
           ))
-        )}
+        }
   </div>
    {error &&<p className='text-red-600 text-center'>{error.msg}</p>}
   <div className=' flex  flex-row justify-center items-center gap-5 py-2 px-7'>
